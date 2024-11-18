@@ -1,5 +1,4 @@
-"""Portfolio and performance
-"""
+"""Portfolio and performance."""
 
 import pandas as pd
 
@@ -8,11 +7,12 @@ from src.performance import metrics
 
 
 class Portfolio:
-    """Class for portfolio data"""
+    """Class for portfolio data."""
 
     def __init__(
         self, positions: pd.DataFrame, prices: pd.DataFrame, transactions: pd.DataFrame, start_cash: float | None = None
     ) -> None:
+        """Initialise portfolio."""
         self.positions = positions
         self.prices = prices
         self.transactions = transactions
@@ -25,7 +25,8 @@ class Portfolio:
         self.cash = 0
 
     def performance(self, baseline=None, start_date: str | None = None) -> dict:
-        """Calculate performance of portfolio
+        """Calculate performance of portfolio.
+
         :param baseline: benchmark Portfolio (optional)
         :param start_date: start date for metrics calculation (optional)
         :return: dictionary with metrics
@@ -79,16 +80,16 @@ class Portfolio:
         return perf_metrics
 
     def get_capitalisation(self) -> pd.Series:
-        """Calculate returns f positions and prices"""
+        """Calculate returns f positions and prices."""
         returns_by_asset = self.positions.mul(self.prices, axis=0).dropna()
         return returns_by_asset.sum(axis=1)
 
     def get_returns(self) -> pd.Series:
-        """Calculate portfolio returns"""
+        """Calculate portfolio returns."""
         return self.capitalisation.pct_change().fillna(0.0)
 
     def _get_cumulative_return(self) -> pd.Series:
-        """Calculate portfolio cumulative returns"""
+        """Calculate portfolio cumulative returns."""
         return (self.returns + 1).cumprod()
 
     def _calculate_cash_flow(self) -> None:
@@ -114,7 +115,8 @@ class Portfolio:
 
 
 def build_portfolio_from_transactions(transactions: pd.DataFrame) -> Portfolio:
-    """Build portfolio from transactions dataset
+    """Build portfolio from transactions dataset.
+
     :param transactions: pandas DataFrame of transactions.
            Columns: 'date': date, 'amount': int, 'ticker': str
            if 'amount' positive, transaction - buy, if negative - sell
@@ -130,7 +132,8 @@ def build_portfolio_from_transactions(transactions: pd.DataFrame) -> Portfolio:
 
 
 def get_positions(transactions: pd.DataFrame) -> pd.DataFrame:
-    """Create dataset with daily positions from transactions
+    """Create dataset with daily positions from transactions.
+
     :param transactions: pandas DataFrame of transactions
     :return: pandas DataFrame with daily positions.
     """
@@ -147,7 +150,8 @@ def get_positions(transactions: pd.DataFrame) -> pd.DataFrame:
 
 
 def get_prices(positions: pd.DataFrame) -> pd.DataFrame:
-    """Get prices for positions
+    """Get prices for positions.
+
     :param positions: pandas DataFrame of positions (number of shares per asset).
     :return: Pandas DataFrame of prices.
     """
@@ -160,7 +164,8 @@ def get_prices(positions: pd.DataFrame) -> pd.DataFrame:
 
 
 def performance_summary(performance: dict) -> pd.DataFrame:
-    """Create pandas DataFrame of performance metrics
+    """Create pandas DataFrame of performance metrics.
+
     :param performance: dictionary with performance metrics
     :return: pandas DataFrame of performance metrics
     """

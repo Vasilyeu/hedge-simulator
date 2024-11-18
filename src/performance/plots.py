@@ -1,5 +1,4 @@
-"""Plotting module
-"""
+"""Plotting module."""
 
 import pandas as pd
 import plotly.express as px
@@ -8,7 +7,8 @@ from src.performance.portfolio import Portfolio
 
 
 def plot_cumulative_returns(portfolio: Portfolio, benchmark: Portfolio, hedge_portfolio: Portfolio | None = None):
-    """Plot cumulative returns
+    """Plot cumulative returns.
+    
     :param portfolio: analyzed Portfolio
     :param benchmark: benchmark Portfolio
     :param hedge_portfolio: hedged Portfolio

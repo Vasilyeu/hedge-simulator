@@ -1,5 +1,4 @@
-"""Module for metrics calculations
-"""
+"""Module for metrics calculations."""
 
 import numpy as np
 import pandas as pd
@@ -9,6 +8,7 @@ from src.core.stats import alpha, beta, down_capture, sortino_ratio, up_capture
 
 def volatility(actives: pd.Series) -> pd.Series:
     """Calculates the volatility of a series.
+
     :param actives: Pandas Series with total value of portfolio actives
     :return: pandas Series with volatility
     """
@@ -45,17 +45,17 @@ def downside_capture_ratio(returns: pd.Series, baseline_returns: pd.Series):
 
 
 def alpha_value(returns: pd.Series, baseline_returns: pd.Series):
-    """Calculates portfolio Alpha"""
+    """Calculates portfolio Alpha."""
     ret = pd.DataFrame({"portfolio": returns, "baseline": baseline_returns}).dropna()
     return alpha(ret.portfolio, ret.baseline, risk_free=0.0)
 
 
 def beta_value(returns: pd.Series, baseline_returns: pd.Series):
-    """Calculate portfolio Beta"""
+    """Calculate portfolio Beta."""
     ret = pd.DataFrame({"portfolio": returns, "baseline": baseline_returns}).dropna()
     return beta(ret.portfolio, ret.baseline, risk_free=0.0)
 
 
 def tracking_error(returns: pd.Series, baseline_returns: pd.Series):
-    """Calculate the tracking error"""
+    """Calculate the tracking error."""
     return np.std((returns - baseline_returns), ddof=1) * np.sqrt(252)
