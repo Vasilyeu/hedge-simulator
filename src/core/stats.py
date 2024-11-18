@@ -10,7 +10,7 @@ import pandas as pd
 from numpy.typing import ArrayLike
 from scipy import optimize, stats
 
-from src.core.utils_emp import (
+from src.core.utils import (
     _adjust_returns,
     _aligned_series,
     _create_binary_vectorized_roll_function,
@@ -2066,33 +2066,3 @@ def gross_lev(positions):
     """
     exposure = positions.drop("cash", axis=1).abs().sum(axis=1)
     return exposure / positions.sum(axis=1)
-
-
-SIMPLE_STAT_FUNCS = [
-    cum_returns_final,
-    annual_return,
-    annual_volatility,
-    sharpe_ratio,
-    calmar_ratio,
-    stability_of_timeseries,
-    max_drawdown,
-    omega_ratio,
-    sortino_ratio,
-    stats.skew,
-    stats.kurtosis,
-    tail_ratio,
-    cagr,
-    value_at_risk,
-    conditional_value_at_risk,
-]
-
-FACTOR_STAT_FUNCS = [
-    excess_sharpe,
-    alpha,
-    beta,
-    beta_fragility_heuristic,
-    gpd_risk_estimates,
-    capture,
-    up_capture,
-    down_capture,
-]
