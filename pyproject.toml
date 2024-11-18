@@ -1,0 +1,65 @@
+[project]
+name = 'hedge-simulator'
+version = '0.1.0'
+authors = [
+    { name='Sergey Vasilev', email='vasilev.sergey.ur@gmail.com' },
+]
+description = 'Hedging simmulations using put options'
+readme = 'README.md'
+requires-python = '>=3.12'
+classifiers = [
+    'Private :: No Upload',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3 :: Only',
+    'Programming Language :: Python :: 3.12',
+    'Operating System :: OS Independent',
+    'License :: Other/Proprietary License'
+]
+
+[tool.coverage.run]
+omit = [
+    'tests/*',
+    '*/__init__.py'
+]
+
+[tool.poetry]
+name = "hedge-simulator"
+version = "0.1.0"
+description = "Hedging simmulations using put options"
+authors = ["Sergey Vasilev"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+duckdb = "^1.0.0"
+pandas = "2.2.2"
+scipy = "1.14.0"
+scikit-learn = "1.5.1"
+yfinance = "0.2.41"
+requests-cache = "1.2.1"
+requests-ratelimiter = "0.7.0"
+matplotlib = "3.9.2"
+seaborn = "0.13.2"
+bottleneck = "1.4.0"
+streamlit = "1.37.1"
+watchdog = "4.0.2"
+plotly = "5.23.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff.lint]
+extend-select = [
+  "UP",  # pyupgrade
+  "D",   # pydocstyle
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff]
+line-length = 120
