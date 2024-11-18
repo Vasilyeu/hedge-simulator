@@ -1,3 +1,4 @@
+"""Utility functions for stats module."""
 from functools import wraps
 
 import numpy as np
@@ -73,8 +74,7 @@ def roll(*args, **kwargs):
     if len(args) > 2:
         raise ValueError("Cannot pass more than 2 return sets")
 
-    if len(args) == 2:
-        if not isinstance(args[0], type(args[1])):
+    if len(args) == 2 and not isinstance(args[0], type(args[1])):
             raise ValueError("The two returns arguments are not the same.")
 
     if isinstance(args[0], np.ndarray):
@@ -156,7 +156,7 @@ def _roll_pandas(func, window, *args, **kwargs):
 
 
 def rolling_window(array, length, mutable=False):
-    """Restride an array of shape
+    """Restride an array of shape.
 
         (X_0, ... X_N)
 
@@ -336,7 +336,9 @@ def _flatten(arr):
 
 
 def _aligned_series(*many_series):
-    """Return a new list of series containing the data in the input series, but
+    """Aligne series to their indices.
+    
+    Return a new list of series containing the data in the input series, but
     with their indices aligned. NaNs will be filled in for missing values.
 
     Parameters
@@ -375,7 +377,7 @@ def _to_pandas(ob):
     pandas_structure : pd.Series or pd.DataFrame
         The correct structure based on the dimensionality of the data.
     """
-    if isinstance(ob, (pd.Series, pd.DataFrame)):
+    if isinstance(ob, pd.Series | pd.DataFrame):
         return ob
 
     if ob.ndim == 1:
@@ -389,8 +391,9 @@ def _to_pandas(ob):
 
 
 def _adjust_returns(returns, adjustment_factor):
-    """Returns the returns series adjusted by adjustment_factor. Optimizes for the
-    case of adjustment_factor being 0 by returning returns itself, not a copy!
+    """Returns the returns series adjusted by adjustment_factor.
+    
+    Optimizes for the case of adjustment_factor being 0 by returning returns itself, not a copy!
 
     Parameters
     ----------
@@ -401,6 +404,6 @@ def _adjust_returns(returns, adjustment_factor):
     -------
     adjusted_returns : array-like
     """
-    if isinstance(adjustment_factor, (float, int)) and adjustment_factor == 0:
+    if isinstance(adjustment_factor, float | int) and adjustment_factor == 0:
         return returns
     return returns - adjustment_factor
