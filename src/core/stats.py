@@ -1,5 +1,5 @@
+"""Statistics functions."""
 import math
-import warnings
 from collections import OrderedDict
 from functools import partial
 from math import pow
@@ -36,8 +36,7 @@ from .periods import (
 
 
 def annualization_factor(period, annualization):
-    """Return annualization factor from period entered or if a custom
-    value is passed in.
+    """Return annualization factor from period entered or if a custom value is passed in.
 
     Parameters
     ----------
@@ -59,16 +58,7 @@ def annualization_factor(period, annualization):
     -------
     annualization_factor : float
     """
-    if annualization is None:
-        try:
-            factor = ANNUALIZATION_FACTORS[period]
-        except KeyError:
-            raise ValueError(
-                "Period cannot be '{}'. " "Can be '{}'.".format(period, "', '".join(ANNUALIZATION_FACTORS.keys()))
-            )
-    else:
-        factor = annualization
-    return factor
+    return ANNUALIZATION_FACTORS[period] if annualization is None else annualization
 
 
 def simple_returns(prices):
@@ -86,7 +76,7 @@ def simple_returns(prices):
         Returns of assets in wide-format, with assets as columns,
         and index coerced to be tz-aware.
     """
-    if isinstance(prices, (pd.DataFrame, pd.Series)):
+    if isinstance(prices, pd.DataFrame | pd.Series):
         out = prices.pct_change().iloc[1:]
     else:
         # Assume np.ndarray
@@ -183,10 +173,7 @@ def cum_returns_final(returns, starting_value=0):
     if len(returns) == 0:
         return np.nan
 
-    if isinstance(returns, pd.DataFrame):
-        result = (returns + 1).prod()
-    else:
-        result = np.nanprod(returns + 1, axis=0)
+    result = (returns + 1).prod() if isinstance(returns, pd.DataFrame) else np.nanprod(returns + 1, axis=0)
 
     if starting_value == 0:
         result -= 1
@@ -330,8 +317,9 @@ roll_max_drawdown = _create_unary_vectorized_roll_function(max_drawdown)
 
 
 def annual_return(returns, period=DAILY, annualization=None):
-    """Determines the mean annual growth rate of returns. This is equivilent
-    to the compound annual growth rate.
+    """Determines the mean annual growth rate of returns.
+    
+    This is equivilent to the compound annual growth rate.
 
     Parameters
     ----------
@@ -370,8 +358,7 @@ def annual_return(returns, period=DAILY, annualization=None):
 
 
 def cagr(returns, period=DAILY, annualization=None):
-    """Compute compound annual growth rate. Alias function for
-    :func:`~empyrical.stats.annual_return`
+    """Compute compound annual growth rate.
 
     Parameters
     ----------
@@ -722,7 +709,7 @@ roll_sortino_ratio = _create_unary_vectorized_roll_function(sortino_ratio)
 
 
 def downside_risk(returns, required_return=0, period=DAILY, annualization=None, out=None):
-    """Determines the downside deviation below a threshold
+    """Determines the downside deviation below a threshold.
 
     Parameters
     ----------
@@ -797,16 +784,6 @@ def downside_risk(returns, required_return=0, period=DAILY, annualization=None, 
 
 
 roll_downside_risk = _create_unary_vectorized_roll_function(downside_risk)
-
-
-# Deprecated typo version
-def roll_downsize_risk(*args, **kwargs):
-    warnings.warn(
-        "roll_downsize_risk is deprecated; use roll_downside_risk instead.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    return roll_downside_risk(*args, **kwargs)
 
 
 def excess_sharpe(returns, factor_returns, out=None):
@@ -1258,59 +1235,17 @@ def beta_aligned(returns, factor_returns, risk_free=0.0, out=None):
         if returns_1d:
             out = out.item()
         return out
-
-    # Copy N times as a column vector and fill with nans to have the same
-    # missing value pattern as the dependent variable.
-    #
-    # PERF_TODO: We could probably avoid the space blowup by doing this in
-    # Cython.
-
-    # shape: (N, M)
+    
     independent = np.where(
         isnan(returns),
         nan,
         factor_returns,
     )
 
-    # Calculate beta as Cov(X, Y) / Cov(X, X).
-    # https://en.wikipedia.org/wiki/Simple_linear_regression#Fitting_the_regression_line  # noqa
-    #
-    # NOTE: The usual formula for covariance is::
-    #
-    #    mean((X - mean(X)) * (Y - mean(Y)))
-    #
-    # However, we don't actually need to take the mean of both sides of the
-    # product, because of the folllowing equivalence::
-    #
-    # Let X_res = (X - mean(X)).
-    # We have:
-    #
-    #     mean(X_res * (Y - mean(Y))) = mean(X_res * (Y - mean(Y)))
-    #                             (1) = mean((X_res * Y) - (X_res * mean(Y)))
-    #                             (2) = mean(X_res * Y) - mean(X_res * mean(Y))
-    #                             (3) = mean(X_res * Y) - mean(X_res) * mean(Y)
-    #                             (4) = mean(X_res * Y) - 0 * mean(Y)
-    #                             (5) = mean(X_res * Y)
-    #
-    #
-    # The tricky step in the above derivation is step (4). We know that
-    # mean(X_res) is zero because, for any X:
-    #
-    #     mean(X - mean(X)) = mean(X) - mean(X) = 0.
-    #
-    # The upshot of this is that we only have to center one of `independent`
-    # and `dependent` when calculating covariances. Since we need the centered
-    # `independent` to calculate its variance in the next step, we choose to
-    # center `independent`.
-
     ind_residual = independent - nanmean(independent, axis=0)
 
     covariances = nanmean(ind_residual * returns, axis=0)
 
-    # We end up with different variances in each column here because each
-    # column may have a different subset of the data dropped due to missing
-    # data in the corresponding dependent column.
-    # shape: (M,)
     np.square(ind_residual, out=ind_residual)
     independent_variances = nanmean(ind_residual, axis=0)
     independent_variances[independent_variances < 1.0e-30] = np.nan
@@ -1327,9 +1262,9 @@ roll_beta_aligned = _create_binary_vectorized_roll_function(beta_aligned)
 
 
 def stability_of_timeseries(returns):
-    """Determines R-squared of a linear fit to the cumulative
-    log returns. Computes an ordinary least squares linear fit,
-    and returns R-squared.
+    """Determines R-squared of a linear fit to the cumulative log returns.
+    
+    Computes an ordinary least squares linear fit, and returns R-squared.
 
     Parameters
     ----------
@@ -1453,7 +1388,7 @@ def beta_fragility_heuristic(returns, factor_returns):
 
 
 def beta_fragility_heuristic_aligned(returns, factor_returns):
-    """Estimate fragility to drops in beta
+    """Estimate fragility to drops in beta.
 
         Parameters
         ----------
@@ -1521,7 +1456,7 @@ def beta_fragility_heuristic_aligned(returns, factor_returns):
 
 
 def gpd_risk_estimates(returns, var_p=0.01):
-    """Estimate VaR and ES using the Generalized Pareto Distribution (GPD)
+    """Estimate VaR and ES using the Generalized Pareto Distribution (GPD).
 
     Parameters
     ----------
@@ -1560,7 +1495,7 @@ def gpd_risk_estimates(returns, var_p=0.01):
 
 
 def gpd_risk_estimates_aligned(returns, var_p=0.01):
-    """Estimate VaR and ES using the Generalized Pareto Distribution (GPD)
+    """Estimate VaR and ES using the Generalized Pareto Distribution (GPD).
 
     Parameters
     ----------
@@ -1609,11 +1544,11 @@ def gpd_risk_estimates_aligned(returns, var_p=0.01):
         shape_param = 0
         while not finished and threshold > MINIMUM_THRESHOLD:
             losses_beyond_threshold = losses[losses >= threshold]
-            param_result = gpd_loglikelihood_minimizer_aligned(losses_beyond_threshold)
+            param_result = _gpd_loglikelihood_minimizer_aligned(losses_beyond_threshold)
             if param_result[0] is not False and param_result[1] is not False:
                 scale_param = param_result[0]
                 shape_param = param_result[1]
-                var_estimate = gpd_var_calculator(
+                var_estimate = _gpd_var_calculator(
                     threshold,
                     scale_param,
                     shape_param,
@@ -1628,7 +1563,7 @@ def gpd_risk_estimates_aligned(returns, var_p=0.01):
             if not finished:
                 threshold = threshold / 2
         if finished:
-            es_estimate = gpd_es_calculator(var_estimate, threshold, scale_param, shape_param)
+            es_estimate = _gpd_es_calculator(var_estimate, threshold, scale_param, shape_param)
             result = np.array(
                 [
                     threshold,
@@ -1643,7 +1578,7 @@ def gpd_risk_estimates_aligned(returns, var_p=0.01):
     return result
 
 
-def gpd_es_calculator(var_estimate, threshold, scale_param, shape_param):
+def _gpd_es_calculator(var_estimate, threshold, scale_param, shape_param):
     result = 0
     if (1 - shape_param) != 0:
         # this formula is from Gilli and Kellezi pg. 8
@@ -1653,7 +1588,7 @@ def gpd_es_calculator(var_estimate, threshold, scale_param, shape_param):
     return result
 
 
-def gpd_var_calculator(threshold, scale_param, shape_param, probability, total_n, exceedance_n):
+def _gpd_var_calculator(threshold, scale_param, shape_param, probability, total_n, exceedance_n):
     result = 0
     if exceedance_n > 0 and shape_param > 0:
         # this formula is from Gilli and Kellezi pg. 12
@@ -1663,12 +1598,12 @@ def gpd_var_calculator(threshold, scale_param, shape_param, probability, total_n
     return result
 
 
-def gpd_loglikelihood_minimizer_aligned(price_data):
+def _gpd_loglikelihood_minimizer_aligned(price_data):
     result = [False, False]
     DEFAULT_SCALE_PARAM = 1
     DEFAULT_SHAPE_PARAM = 1
     if len(price_data) > 0:
-        gpd_loglikelihood_lambda = gpd_loglikelihood_factory(price_data)
+        gpd_loglikelihood_lambda = _gpd_loglikelihood_factory(price_data)
         optimization_results = optimize.minimize(
             gpd_loglikelihood_lambda,
             np.array([DEFAULT_SCALE_PARAM, DEFAULT_SHAPE_PARAM]),
@@ -1682,25 +1617,17 @@ def gpd_loglikelihood_minimizer_aligned(price_data):
     return result
 
 
-def gpd_loglikelihood_factory(price_data):
-    return lambda params: gpd_loglikelihood(params, price_data)
+def _gpd_loglikelihood_factory(price_data):
+    return lambda params: _gpd_loglikelihood(params, price_data)
 
 
-def gpd_loglikelihood(params, price_data):
+def _gpd_loglikelihood(params, price_data):
     if params[1] != 0:
-        return -gpd_loglikelihood_scale_and_shape(params[0], params[1], price_data)
-    return -gpd_loglikelihood_scale_only(params[0], price_data)
+        return -_gpd_loglikelihood_scale_and_shape(params[0], params[1], price_data)
+    return -_gpd_loglikelihood_scale_only(params[0], price_data)
 
 
-def gpd_loglikelihood_scale_and_shape_factory(price_data):
-    # minimize a function of two variables requires a list of params
-    # we are expecting the lambda below to be called as follows:
-    # parameters = [scale, shape]
-    # the final outer negative is added because scipy only minimizes
-    return lambda params: -gpd_loglikelihood_scale_and_shape(params[0], params[1], price_data)
-
-
-def gpd_loglikelihood_scale_and_shape(scale, shape, price_data):
+def _gpd_loglikelihood_scale_and_shape(scale, shape, price_data):
     n = len(price_data)
     result = -1 * float_info.max
     if scale != 0:
@@ -1710,12 +1637,7 @@ def gpd_loglikelihood_scale_and_shape(scale, shape, price_data):
     return result
 
 
-def gpd_loglikelihood_scale_only_factory(price_data):
-    # the negative is added because scipy only minimizes
-    return lambda scale: -gpd_loglikelihood_scale_only(scale, price_data)
-
-
-def gpd_loglikelihood_scale_only(scale, price_data):
+def _gpd_loglikelihood_scale_only(scale, price_data):
     n = len(price_data)
     data_sum = price_data.sum()
     result = -1 * float_info.max
@@ -1725,7 +1647,7 @@ def gpd_loglikelihood_scale_only(scale, price_data):
 
 
 def up_capture(returns, factor_returns, **kwargs):
-    """Compute the capture ratio for periods when the benchmark return is positive
+    """Compute the capture ratio for periods when the benchmark return is positive.
 
     Parameters
     ----------
@@ -1758,7 +1680,7 @@ def up_capture(returns, factor_returns, **kwargs):
 
 
 def down_capture(returns, factor_returns, **kwargs):
-    """Compute the capture ratio for periods when the benchmark return is negative
+    """Compute the capture ratio for periods when the benchmark return is negative.
 
     Parameters
     ----------
@@ -1821,6 +1743,7 @@ def up_down_capture(returns, factor_returns, **kwargs):
 
 def batting_average(returns, factor_returns):
     """Computes the batting average.
+
     Parameters
     ----------
     returns : pd.Series or np.ndarray
@@ -1896,8 +1819,6 @@ def down_alpha_beta(returns, factor_returns, **kwargs):
 
 def roll_up_capture(returns, factor_returns, window=10, **kwargs):
     """Computes the up capture measure over a rolling window.
-    see documentation for :func:`~empyrical.stats.up_capture`.
-    (pass all args, kwargs required)
 
     Parameters
     ----------
@@ -1919,8 +1840,6 @@ def roll_up_capture(returns, factor_returns, window=10, **kwargs):
 
 def roll_down_capture(returns, factor_returns, window=10, **kwargs):
     """Computes the down capture measure over a rolling window.
-    see documentation for :func:`~empyrical.stats.down_capture`.
-    (pass all args, kwargs required)
 
     Parameters
     ----------
@@ -1942,8 +1861,6 @@ def roll_down_capture(returns, factor_returns, window=10, **kwargs):
 
 def roll_up_down_capture(returns, factor_returns, window=10, **kwargs):
     """Computes the up/down capture measure over a rolling window.
-    see documentation for :func:`~empyrical.stats.up_down_capture`.
-    (pass all args, kwargs required)
 
     Parameters
     ----------

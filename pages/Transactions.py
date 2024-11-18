@@ -10,6 +10,7 @@ from src.performance.portfolio import build_portfolio_from_transactions
 
 def build_portfolio_with_benchmark(transactions: pd.DataFrame, benchmark_ticker: str) -> None:
     """Build portfolio from transactions and calculate performance compared to benchmark.
+
     Save portfolio, benchmark portfolio and performance table in session state
     :param transactions: pandas DataFrame with transactions
     :param benchmark_ticker: string, benchmark ticker
@@ -24,7 +25,7 @@ def build_portfolio_with_benchmark(transactions: pd.DataFrame, benchmark_ticker:
 
 
 def clear_portfolio() -> None:
-    """Clear portfolio button"""
+    """Clear portfolio button."""
     st.session_state.portfolio = None
     st.session_state.benchmark = None
     st.session_state.performance = {}
@@ -33,7 +34,7 @@ def clear_portfolio() -> None:
 
 
 def add_transaction():
-    """Add a transaction form"""
+    """Add a transaction form."""
     with st.form(key="add_transaction", clear_on_submit=False):
         st.write("Add transaction to portfolio")
         date = st.date_input("Date", datetime.date.today())
@@ -50,7 +51,7 @@ def add_transaction():
 
 
 def build_portfolio():
-    """Build portfolio button"""
+    """Build portfolio button."""
     with st.form(key="build_portfolio", clear_on_submit=False):
         st.write("Build portfolio from transactions")
         benchmark_ticker = st.text_input("Benchmark Ticker", "SPY")
@@ -61,7 +62,7 @@ def build_portfolio():
 
 
 def main():
-    """Transactions page"""
+    """Transactions page."""
     if "portfolio" not in st.session_state:
         st.session_state.portfolio = None
         st.session_state.benchmark = None

@@ -5,7 +5,7 @@ import streamlit as st
 
 
 def main():
-    """App Main page"""
+    """App Main page."""
     st.set_page_config(page_title="Main", page_icon="📈")
     st.title("Portfolio Analysis")
     st.markdown(

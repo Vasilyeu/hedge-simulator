@@ -7,7 +7,7 @@ from src.performance.portfolio import performance_summary
 
 
 def main():
-    """Portfolio page"""
+    """Portfolio page."""
     st.set_page_config(page_title="Portfolio", page_icon="📈")
     st.title("Portfolio Analysis")
     st.write("Portfolio Performance Summary")

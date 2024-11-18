@@ -9,7 +9,7 @@ from src.simulation.transformations import filter_non_technology_company
 
 
 def get_hedge_simulator():
-    """Hedging configuration form"""
+    """Hedging configuration form."""
     with st.form(key="create_hedge", clear_on_submit=False):
         st.write("Configuration for Simple Hedge Simulator")
         relative_strike = st.number_input("Relative strike price", value=1.00, min_value=0.01)
@@ -41,7 +41,7 @@ def get_hedge_simulator():
 
 
 def hedge_performance_summary():
-    """Build performance summary table"""
+    """Build performance summary table."""
     portfolio_performance = performance_summary(st.session_state.portfolio.performance(st.session_state.benchmark))
     hedge_performance = performance_summary(st.session_state.hedge_portfolio.performance(st.session_state.benchmark))
     performance = portfolio_performance.join(hedge_performance, rsuffix="_hedge")
@@ -50,7 +50,7 @@ def hedge_performance_summary():
 
 
 def main():
-    """Hedging page"""
+    """Hedging page."""
     st.set_page_config(page_title="Hedging", page_icon="📈")
     st.title("Base Hedge Simulation")
 
