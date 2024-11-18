@@ -33,6 +33,7 @@ WORKDIR /app
 COPY pages/ ./pages
 COPY Main.py ./
 COPY src/ ./src
+RUN mkdir -p ./data
 
 EXPOSE 8501
 
