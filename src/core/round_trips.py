@@ -2,13 +2,13 @@
 """
 
 import warnings
-from collections import deque, OrderedDict
+from collections import OrderedDict, deque
 from math import copysign
 
 import numpy as np
 import pandas as pd
 
-from .utils import print_table, format_asset
+from .utils import format_asset, print_table
 
 PNL_STATS = [
     ("Total profit", lambda x: x.sum()),

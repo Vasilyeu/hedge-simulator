@@ -17,10 +17,11 @@ from matplotlib.ticker import FuncFormatter
 
 import src.core.capacity as capacity
 import src.core.pos as pos
+import src.core.stats as ep
 import src.core.timeseries as timeseries
 import src.core.txn as txn
 import src.core.utils as utils
-import src.core.stats as ep
+
 from .utils import APPROX_BDAYS_PER_MONTH, MM_DISPLAY_UNIT
 
 

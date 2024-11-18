@@ -1,5 +1,4 @@
-"""Put options simulator
-"""
+"""Put options simulator."""
 
 from datetime import date
 from queue import PriorityQueue
@@ -14,11 +13,12 @@ from src.utils.utils import get_next_friday
 
 
 class OptionsSimulator:
-    """Put Option Simulator"""
+    """Put Option Simulator."""
 
     def __init__(
         self, relative_strike_price: float, maturity_months: int, new_option_trigger: float | None = None
     ) -> None:
+        """Initialize OptionsSimulator."""
         self.relative_strike_price = relative_strike_price
         self.maturity_months = maturity_months
         self.new_option_trigger = new_option_trigger
@@ -27,7 +27,7 @@ class OptionsSimulator:
         self.options = None
 
     def apply_strategy(self, portfolio: Portfolio) -> Portfolio:
-        """Apply strategy to portfolio"""
+        """Apply strategy to portfolio."""
         puts_options, new_transactions = self.get_put_options(portfolio)
         self.cost = puts_options["cost"].sum()
         self.options = puts_options
@@ -41,7 +41,7 @@ class OptionsSimulator:
         return hedge_portfolio
 
     def get_put_options(self, portfolio: Portfolio) -> (pd.DataFrame, pd.DataFrame):
-        """Get put options for portfolio"""
+        """Get put options for portfolio."""
         put_options = []
         new_transactions = []
         buy_transactions = portfolio.transactions[portfolio.transactions["amount"] > 0]
@@ -59,7 +59,7 @@ class OptionsSimulator:
             next_expire_option = all_options.get()[1]
             current_min_expire = pd.Timestamp(next_expire_option["expire"])
             prices = portfolio.prices.copy().dropna().iloc[1:]
-            for index_date, current_price in zip(prices.index, prices[ticker].to_numpy()):
+            for index_date, current_price in zip(prices.index, prices[ticker].to_numpy(), strict=False):
                 if index_date == current_min_expire:
                     if current_price < next_expire_option["strike"]:
                         sold_money = next_expire_option["strike"] * next_expire_option["amount"]
@@ -116,7 +116,7 @@ class OptionsSimulator:
         return pd.DataFrame(put_options), new_transactions_df
 
     def _process_one_transaction(self, transaction: dict, portfolio: Portfolio) -> (pd.DataFrame, pd.DataFrame):
-        """Process one transaction"""
+        """Process one transaction."""
         ticker = transaction["ticker"]
         tr_date = pd.Timestamp(transaction["date"])
         price = portfolio.prices.loc[tr_date, ticker]
@@ -128,7 +128,7 @@ class OptionsSimulator:
         return self._get_put_option(ticker, price, transaction["amount"], tr_date, premium)
 
     def _get_put_option(self, ticker: str, price: float, amount: int, transaction_date: date, premium: float) -> dict:
-        """Get a put option"""
+        """Get a put option."""
         expire = transaction_date + pd.Timedelta(days=int(self.maturity_months * 30.5))
         return {
             "ticker": ticker,
@@ -142,7 +142,7 @@ class OptionsSimulator:
 
 
 def _get_put_prices(put_transactions: pd.DataFrame) -> pd.DataFrame:
-    """Get put prices"""
+    """Get put prices."""
     return (
         pd.concat(
             [

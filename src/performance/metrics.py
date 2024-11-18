@@ -4,7 +4,7 @@
 import numpy as np
 import pandas as pd
 
-from src.core.stats import up_capture, down_capture, alpha, beta, sortino_ratio
+from src.core.stats import alpha, beta, down_capture, sortino_ratio, up_capture
 
 
 def volatility(actives: pd.Series) -> pd.Series:

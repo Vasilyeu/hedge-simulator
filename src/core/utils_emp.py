@@ -1,9 +1,9 @@
 import errno
 import warnings
 from datetime import datetime
-from functools import wraps, partial
-from os import makedirs, environ
-from os.path import expanduser, join, getmtime, isdir
+from functools import partial, wraps
+from os import environ, makedirs
+from os.path import expanduser, getmtime, isdir, join
 
 import numpy as np
 import pandas as pd

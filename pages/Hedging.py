@@ -1,12 +1,11 @@
-"""UI for application
-"""
+"""UI for application."""
 
 import streamlit as st
 
-from src.simulation.base_simulator import OptionsSimulator
-from src.simulation.transformations import filter_non_technology_company
 from src.performance.plots import plot_cumulative_returns
 from src.performance.portfolio import performance_summary
+from src.simulation.base_simulator import OptionsSimulator
+from src.simulation.transformations import filter_non_technology_company
 
 
 def get_hedge_simulator():

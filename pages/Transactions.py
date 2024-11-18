@@ -1,10 +1,9 @@
-"""Page for transaction management
-"""
+"""Page for transaction management."""
 
 import datetime
 
-import streamlit as st
 import pandas as pd
+import streamlit as st
 
 from src.performance.portfolio import build_portfolio_from_transactions
 

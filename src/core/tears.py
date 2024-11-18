@@ -5,19 +5,12 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-from IPython.display import display, Markdown
+from IPython.display import Markdown, display
 
 import src.core.stats as ep
 import src.core.utils_emp as ep_utils
-from . import capacity
-from . import perf_attrib
-from . import plotting
-from . import pos
-from . import round_trips
-from . import timeseries
-from . import txn
-from . import utils
 
+from . import capacity, perf_attrib, plotting, pos, round_trips, timeseries, txn, utils
 
 FACTOR_PARTITIONS = {
     "style": [

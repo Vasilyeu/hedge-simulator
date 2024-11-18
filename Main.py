@@ -1,5 +1,4 @@
-"""UI for application
-"""
+"""UI for application."""
 
 import pandas as pd
 import streamlit as st

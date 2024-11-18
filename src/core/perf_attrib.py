@@ -4,15 +4,16 @@
 import warnings
 from collections import OrderedDict
 
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+
+import src.core.stats as ep
+from src.core.perf_attr import compute_exposures as em_compute_exposures
+from src.core.perf_attr import perf_attrib as em_perf_attrib
 
 from .pos import get_percent_alloc
 from .txn import get_turnover
-from .utils import print_table, configure_legend
-from src.core.perf_attr import perf_attrib as em_perf_attrib
-from src.core.perf_attr import compute_exposures as em_compute_exposures
-import src.core.stats as ep
+from .utils import configure_legend, print_table
 
 PERF_ATTRIB_TURNOVER_THRESHOLD = 0.25
 

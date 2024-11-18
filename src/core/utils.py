@@ -3,13 +3,13 @@ from itertools import cycle
 
 import numpy as np
 import pandas as pd
-from IPython.display import display, HTML
+from IPython.display import HTML, display
 from matplotlib.pyplot import get_cmap
 from packaging.version import Version
 
-from . import pos
-from . import txn
 from src.core import utils_emp
+
+from . import pos, txn
 
 APPROX_BDAYS_PER_MONTH = 21
 APPROX_BDAYS_PER_YEAR = 252
@@ -463,7 +463,7 @@ def configure_legend(ax, autofmt_xdate=True, change_colors=False, rotation=30, h
 
     # make legend order match graph lines
     handles, labels = ax.get_legend_handles_labels()
-    handles_and_labels_sorted = sorted(zip(handles, labels), key=lambda x: x[0].get_ydata()[-1], reverse=True)
+    handles_and_labels_sorted = sorted(zip(handles, labels, strict=False), key=lambda x: x[0].get_ydata()[-1], reverse=True)
 
     handles_sorted = [h[0] for h in handles_and_labels_sorted]
     labels_sorted = [h[1] for h in handles_and_labels_sorted]

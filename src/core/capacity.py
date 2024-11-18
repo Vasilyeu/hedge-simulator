@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 
 from src.core.stats import cum_returns
+
 from . import pos
 
 

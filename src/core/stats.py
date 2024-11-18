@@ -1,14 +1,14 @@
 import math
+import warnings
 from collections import OrderedDict
 from functools import partial
 from math import pow
 from sys import float_info
-import warnings
 
 import numpy as np
 import pandas as pd
-from scipy import optimize, stats
 from numpy.typing import ArrayLike
+from scipy import optimize, stats
 
 from src.core.utils_emp import (
     _adjust_returns,
@@ -22,6 +22,7 @@ from src.core.utils_emp import (
     roll,
     up,
 )
+
 from .periods import (
     ANNUALIZATION_FACTORS,
     APPROX_BDAYS_PER_MONTH,
@@ -1509,7 +1510,7 @@ def beta_fragility_heuristic_aligned(returns, factor_returns):
 
     # find weights for the start and end returns
     # using a convex combination
-    if not factor_returns_range == 0:
+    if factor_returns_range != 0:
         start_returns_weight = (mid_factor_returns - start_factor_returns) / factor_returns_range
         end_returns_weight = (end_factor_returns - mid_factor_returns) / factor_returns_range
 
@@ -2044,7 +2045,7 @@ def rolling_beta(returns, factor_returns, rolling_window=APPROX_BDAYS_PER_MONTH 
     if factor_returns.ndim > 1:
         return factor_returns.apply(partial(rolling_beta, returns), rolling_window=rolling_window)
     out = pd.Series(index=returns.index, dtype="float64")
-    for beg, end in zip(returns.index[0:-rolling_window], returns.index[rolling_window:]):
+    for beg, end in zip(returns.index[0:-rolling_window], returns.index[rolling_window:], strict=False):
         out.loc[end] = beta(returns.loc[beg:end], factor_returns.loc[beg:end])
     return out
 
