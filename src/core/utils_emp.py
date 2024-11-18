@@ -58,8 +58,7 @@ except ImportError:
 
 
 def roll(*args, **kwargs):
-    """
-    Calculates a given statistic across a rolling time period.
+    """Calculates a given statistic across a rolling time period.
 
     Parameters
     ----------
@@ -75,7 +74,7 @@ def roll(*args, **kwargs):
     (other keywords): other keywords that are required to be passed to the
         function in the 'function' argument may also be passed in.
 
-    Returns
+    Returns:
     -------
     np.ndarray, pd.Series
         depends on input type
@@ -101,8 +100,7 @@ def roll(*args, **kwargs):
 
 
 def up(returns, factor_returns, **kwargs):
-    """
-    Calculates a given statistic filtering only positive factor return periods.
+    """Calculates a given statistic filtering only positive factor return periods.
 
     Parameters
     ----------
@@ -116,7 +114,7 @@ def up(returns, factor_returns, **kwargs):
     (other keywords): other keywords that are required to be passed to the
         function in the 'function' argument may also be passed in.
 
-    Returns
+    Returns:
     -------
     Same as the return of the function
     """
@@ -127,8 +125,7 @@ def up(returns, factor_returns, **kwargs):
 
 
 def down(returns, factor_returns, **kwargs):
-    """
-    Calculates a given statistic filtering only negative factor return periods.
+    """Calculates a given statistic filtering only negative factor return periods.
 
     Parameters
     ----------
@@ -142,7 +139,7 @@ def down(returns, factor_returns, **kwargs):
     (other keywords): other keywords that are required to be passed to the
         function in the 'function' argument may also be passed in.
 
-    Returns
+    Returns:
     -------
     Same as the return of the 'function'
     """
@@ -193,10 +190,8 @@ def data_path(name):
 
 
 def ensure_directory(path):
+    """Ensure that a directory named "path" exists.
     """
-    Ensure that a directory named "path" exists.
-    """
-
     try:
         makedirs(path)
     except OSError as exc:
@@ -205,8 +200,7 @@ def ensure_directory(path):
 
 
 def get_utc_timestamp(dt):
-    """
-    Returns the Timestamp/DatetimeIndex
+    """Returns the Timestamp/DatetimeIndex
     with either localized or converted to UTC.
 
     Parameters
@@ -214,12 +208,11 @@ def get_utc_timestamp(dt):
     dt : Timestamp/DatetimeIndex
         the date(s) to be converted
 
-    Returns
+    Returns:
     -------
     same type as input
         date(s) converted to UTC
     """
-
     dt = pd.to_datetime(dt)
     try:
         dt = dt.tz_localize("UTC")
@@ -240,14 +233,14 @@ def get_fama_french(
     end=None,
     datasets=("F-F_Research_Data_Factors_daily", "F-F_Momentum_Factor_daily"),
 ):
-    """
-    Retrieve Fama-French factors via pandas-datareader
+    """Retrieve Fama-French factors via pandas-datareader
     Parameters
     ----------
     start: str or datetime or Timestamp, start date
     end: str or datetime or Timestamp, end date
     datasets: list of factors (default is the five factors)
-    Returns
+
+    Returns:
     -------
     pandas.DataFrame
         Percent change of Fama-French factors
@@ -275,8 +268,7 @@ def get_fama_french(
 
 
 def get_returns_cached(filepath, update_func, latest_dt, **kwargs):
-    """
-    Get returns from a cached file if the cache is recent enough,
+    """Get returns from a cached file if the cache is recent enough,
     otherwise, try to retrieve via a provided update function and
     update the cache file.
     Parameters
@@ -289,12 +281,12 @@ def get_returns_cached(filepath, update_func, latest_dt, **kwargs):
         Latest datetime required in csv file.
     **kwargs : Keyword arguments
         Optional keyword arguments will be passed to update_func()
-    Returns
+
+    Returns:
     -------
     pandas.DataFrame
         DataFrame containing returns
     """
-
     update_cache = False
 
     try:
@@ -322,11 +314,7 @@ def get_returns_cached(filepath, update_func, latest_dt, **kwargs):
             ensure_directory(cache_dir())
         except OSError as e:
             warnings.warn(
-                "could not update cache: {}. {}: {}".format(
-                    filepath,
-                    type(e).__name__,
-                    e,
-                ),
+                f"could not update cache: {filepath}. {type(e).__name__}: {e}",
                 UserWarning,
             )
 
@@ -334,11 +322,7 @@ def get_returns_cached(filepath, update_func, latest_dt, **kwargs):
             returns.to_csv(filepath)
         except OSError as e:
             warnings.warn(
-                "could not update cache {}. {}: {}".format(
-                    filepath,
-                    type(e).__name__,
-                    e,
-                ),
+                f"could not update cache {filepath}. {type(e).__name__}: {e}",
                 UserWarning,
             )
 
@@ -346,16 +330,15 @@ def get_returns_cached(filepath, update_func, latest_dt, **kwargs):
 
 
 def load_portfolio_risk_factors(filepath_prefix=None, start=None, end=None):
-    """
-    Load risk factors Mkt-Rf, SMB, HML, Rf, and UMD.
+    """Load risk factors Mkt-Rf, SMB, HML, Rf, and UMD.
     Data is stored in HDF5 file. If the data is more than 2
     days old, redownload from Dartmouth.
-    Returns
+
+    Returns:
     -------
     five_factors : pd.DataFrame
         Risk factors timeseries.
     """
-
     if start is None:
         start = "1/1/1970"
     if end is None:
@@ -375,8 +358,7 @@ def load_portfolio_risk_factors(filepath_prefix=None, start=None, end=None):
 
 
 def get_treasury_yield(start=None, end=None, period="3MO"):
-    """
-    Load treasury yields from FRED.
+    """Load treasury yields from FRED.
 
     Parameters
     ----------
@@ -388,12 +370,12 @@ def get_treasury_yield(start=None, end=None, period="3MO"):
         Defaults to latest date available.
     period : {'1MO', '3MO', '6MO', 1', '5', '10'}, optional
         Which maturity to use.
-    Returns
+
+    Returns:
     -------
     pd.Series
         Annual treasury yield for every day.
     """
-
     if start is None:
         start = "1970-01-01"
     if end is None:
@@ -404,8 +386,7 @@ def get_treasury_yield(start=None, end=None, period="3MO"):
 
 
 def get_symbol_returns_from_yahoo(symbol, start=None, end=None):
-    """
-    Wrapper for pandas.io.data.get_data_yahoo().
+    """Wrapper for pandas.io.data.get_data_yahoo().
     Retrieves prices for symbol from yahoo and computes returns
     based on adjusted closing prices.
 
@@ -418,18 +399,17 @@ def get_symbol_returns_from_yahoo(symbol, start=None, end=None):
     end : pandas.Timestamp compatible, optional
         End date of time period to retrieve
 
-    Returns
+    Returns:
     -------
     pandas.DataFrame
         Returns of symbol in requested period.
     """
-
     try:
         px = yf.download(symbol, start=start, end=end)
         rets = px[["Adj Close"]].pct_change().dropna()
     except Exception as e:
         warnings.warn(
-            "Yahoo Finance read failed: {}".format(e),
+            f"Yahoo Finance read failed: {e}",
             UserWarning,
         )
 
@@ -439,8 +419,7 @@ def get_symbol_returns_from_yahoo(symbol, start=None, end=None):
 
 
 def default_returns_func(symbol, start=None, end=None):
-    """
-    Gets returns for a symbol.
+    """Gets returns for a symbol.
     Queries Yahoo Finance. Attempts to cache SPY.
 
     Parameters
@@ -454,13 +433,12 @@ def default_returns_func(symbol, start=None, end=None):
         Latest date to fetch data for.
         Defaults to latest date available.
 
-    Returns
+    Returns:
     -------
     pd.Series
         Daily returns for the symbol.
          - See full explanation in tears.create_full_tear_sheet (returns).
     """
-
     if start is None:
         start = "1970-01-01"
     if end is None:
@@ -487,8 +465,7 @@ def default_returns_func(symbol, start=None, end=None):
 
 
 def rolling_window(array, length, mutable=False):
-    """
-    Restride an array of shape
+    """Restride an array of shape
 
         (X_0, ... X_N)
 
@@ -513,11 +490,11 @@ def rolling_window(array, length, mutable=False):
         to multiple indices. Writes to a single index may appear to change many
         values in the returned array.
 
-    Returns
+    Returns:
     -------
     out : np.ndarray
 
-    Example
+    Example:
     -------
     >>> from numpy import arange
     >>> a = arange(25).reshape(5, 5)
@@ -549,10 +526,7 @@ def rolling_window(array, length, mutable=False):
         raise IndexError("Can't restride a scalar.")
     elif orig_shape[0] < length:
         raise IndexError(
-            "Can't restride array of shape {shape} with" " a window length of {len}".format(
-                shape=orig_shape,
-                len=length,
-            )
+            f"Can't restride array of shape {orig_shape} with" f" a window length of {length}"
         )
 
     num_windows = orig_shape[0] - length + 1
@@ -567,8 +541,7 @@ def rolling_window(array, length, mutable=False):
 
 def _create_unary_vectorized_roll_function(function):
     def unary_vectorized_roll(arr, window, out=None, **kwargs):
-        """
-        Computes the {human_readable} measure over a rolling window.
+        """Computes the {human_readable} measure over a rolling window.
 
         Parameters
         ----------
@@ -582,7 +555,7 @@ def _create_unary_vectorized_roll_function(function):
         **kwargs
             Forwarded to :func:`~empyrical.{name}`.
 
-        Returns
+        Returns:
         -------
         rolling_{name} : array-like
             The rolling {human_readable}.
@@ -614,8 +587,7 @@ def _create_unary_vectorized_roll_function(function):
 
 def _create_binary_vectorized_roll_function(function):
     def binary_vectorized_roll(lhs, rhs, window, out=None, **kwargs):
-        """
-        Computes the {human_readable} measure over a rolling window.
+        """Computes the {human_readable} measure over a rolling window.
 
         Parameters
         ----------
@@ -631,7 +603,7 @@ def _create_binary_vectorized_roll_function(function):
         **kwargs
             Forwarded to :func:`~empyrical.{name}`.
 
-        Returns
+        Returns:
         -------
         rolling_{name} : array-like
             The rolling {human_readable}.
@@ -672,8 +644,7 @@ def _flatten(arr):
 
 
 def _aligned_series(*many_series):
-    """
-    Return a new list of series containing the data in the input series, but
+    """Return a new list of series containing the data in the input series, but
     with their indices aligned. NaNs will be filled in for missing values.
 
     Parameters
@@ -681,7 +652,7 @@ def _aligned_series(*many_series):
     *many_series
         The series to align.
 
-    Returns
+    Returns:
     -------
     aligned_series : iterable[array-like]
         A new list of series containing the data in the input series, but
@@ -707,7 +678,7 @@ def _to_pandas(ob):
     ob : array-like
         The object to convert.
 
-    Returns
+    Returns:
     -------
     pandas_structure : pd.Series or pd.DataFrame
         The correct structure based on the dimensionality of the data.
@@ -726,8 +697,7 @@ def _to_pandas(ob):
 
 
 def _adjust_returns(returns, adjustment_factor):
-    """
-    Returns the returns series adjusted by adjustment_factor. Optimizes for the
+    """Returns the returns series adjusted by adjustment_factor. Optimizes for the
     case of adjustment_factor being 0 by returning returns itself, not a copy!
 
     Parameters
@@ -735,7 +705,7 @@ def _adjust_returns(returns, adjustment_factor):
     returns : pd.Series or np.ndarray
     adjustment_factor : pd.Series or np.ndarray or float or int
 
-    Returns
+    Returns:
     -------
     adjusted_returns : array-like
     """

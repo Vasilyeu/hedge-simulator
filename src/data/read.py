@@ -1,5 +1,4 @@
-"""
-Module for reading data.
+"""Module for reading data.
 """
 
 import datetime
@@ -55,10 +54,10 @@ class LocalReader:
     def _create_tables_if_not_exists(self):
         """Create required tables if they don't exist."""
         self.con.execute(
-            (
+            
                 "CREATE TABLE IF NOT EXISTS stocks "
                 "(ticker VARCHAR, date DATE, open FLOAT, close FLOAT, high FLOAT, low FLOAT, PRIMARY KEY (ticker, date))"
-            )
+            
         )
         self.con.execute(
             "CREATE TABLE IF NOT EXISTS stocks_info (ticker VARCHAR, sector VARCHAR, PRIMARY KEY (ticker))"
@@ -76,10 +75,10 @@ class LocalReader:
     def get_prices(self, ticker: str, start_date: datetime.date, end_date: datetime.date) -> pd.DataFrame:
         """Read prices from DB"""
         return self.con.sql(
-            (
+            
                 f"SELECT date, close FROM stocks "
                 f"WHERE ticker = '{ticker}' AND date BETWEEN '{start_date}' AND '{end_date}' ORDER BY date"
-            )
+            
         ).df()
 
     def save_sector(self, data: dict[str, str]) -> None:
@@ -94,8 +93,7 @@ class LocalReader:
 
 
 def read_prices(ticker: str, start_date: datetime.date, end_date: datetime.date) -> pd.Series:
-    """
-    Read prices for the ticker.
+    """Read prices for the ticker.
     First, try to read prices from a local database. If data is absent - get data from Yahoo Finance API
     :param ticker: string, market ticker
     :param start_date: first date to read
@@ -128,8 +126,7 @@ def read_prices(ticker: str, start_date: datetime.date, end_date: datetime.date)
 
 
 def read_sector(tickers: list[str]) -> pd.DataFrame:
-    """
-    Read industry of the company
+    """Read industry of the company
     :param tickers: list of strings, companies' market tickers
     :return: pandas DataFrame with tickers and industries
     """

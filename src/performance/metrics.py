@@ -1,5 +1,4 @@
-"""
-Module for metrics calculations
+"""Module for metrics calculations
 """
 
 import numpy as np
@@ -9,8 +8,7 @@ from src.core.stats import up_capture, down_capture, alpha, beta, sortino_ratio
 
 
 def volatility(actives: pd.Series) -> pd.Series:
-    """
-    Calculates the volatility of a series.
+    """Calculates the volatility of a series.
     :param actives: Pandas Series with total value of portfolio actives
     :return: pandas Series with volatility
     """

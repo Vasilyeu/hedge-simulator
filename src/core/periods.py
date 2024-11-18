@@ -1,5 +1,4 @@
-"""
-Periods constants
+"""Periods constants
 """
 
 APPROX_BDAYS_PER_MONTH = 21

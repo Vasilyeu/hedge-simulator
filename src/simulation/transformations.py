@@ -1,5 +1,4 @@
-"""
-Transformation module
+"""Transformation module
 """
 
 import pandas as pd
@@ -9,8 +8,7 @@ from src.performance.portfolio import Portfolio, build_portfolio_from_transactio
 
 
 def filter_non_technology_company(transactions: pd.DataFrame) -> Portfolio:
-    """
-    Remove non technology companies transactions
+    """Remove non technology companies transactions
     :param transactions: pandas DataFrame with transactions
     :return: Portfolio without non technology companies
     """

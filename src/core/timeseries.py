@@ -1,5 +1,4 @@
-"""
-Timeseries module
+"""Timeseries module
 """
 
 from collections import OrderedDict
@@ -15,8 +14,7 @@ from .utils import APPROX_BDAYS_PER_YEAR
 
 
 def value_at_risk(returns, period=None, sigma=2.0):
-    """
-    Get value at risk (VaR).
+    """Get value at risk (VaR).
 
     Parameters
     ----------
@@ -86,8 +84,7 @@ def perf_stats(
     transactions=None,
     turnover_denom="AGB",
 ):
-    """
-    Calculates various performance metrics of a strategy, for use in
+    """Calculates various performance metrics of a strategy, for use in
     plotting.show_perf_stats.
 
     Parameters
@@ -110,12 +107,11 @@ def perf_stats(
         Either AGB or portfolio_value, default AGB.
         - See full explanation in txn.get_turnover.
 
-    Returns
+    Returns:
     -------
     pd.Series
         Performance metrics.
     """
-
     statistics = pd.Series(dtype="float64")
     for stat_func in SIMPLE_STAT_FUNCS:
         statistics[STAT_FUNC_NAMES[stat_func.__name__]] = stat_func(returns)
@@ -151,7 +147,7 @@ def perf_stats_bootstrap(returns, factor_returns=None, return_stats=True):
         If False, returns a DataFrame with the bootstrap samples for
         each perf metric.
 
-    Returns
+    Returns:
     -------
     pd.DataFrame
         if return_stats is True:
@@ -160,7 +156,6 @@ def perf_stats_bootstrap(returns, factor_returns=None, return_stats=True):
         if return_stats is False:
         - Bootstrap samples for each performance metric.
     """
-
     bootstrap_values = OrderedDict()
 
     for stat_func in SIMPLE_STAT_FUNCS:
@@ -202,12 +197,11 @@ def calc_bootstrap(func, returns, *args, **kwargs):
         Number of bootstrap samples to draw. Default is 1000.
         Increasing this will lead to more stable / accurate estimates.
 
-    Returns
+    Returns:
     -------
     numpy.ndarray
         Bootstrapped sampling distribution of passed in func.
     """
-
     n_samples = kwargs.pop("n_samples", 1000)
     out = np.empty(n_samples)
 
@@ -233,13 +227,12 @@ def calc_distribution_stats(x):
     x : numpy.ndarray or pandas.Series
         Array to compute summary statistics for.
 
-    Returns
+    Returns:
     -------
     pandas.Series
         Series containing mean, median, std, as well as 5, 25, 75 and
         95 percentiles of passed in values.
     """
-
     return pd.Series(
         {
             "mean": np.mean(x),
@@ -255,8 +248,7 @@ def calc_distribution_stats(x):
 
 
 def get_max_drawdown_underwater(underwater):
-    """
-    Determines peak, valley, and recovery dates given an 'underwater'
+    """Determines peak, valley, and recovery dates given an 'underwater'
     DataFrame.
 
     An underwater DataFrame is a DataFrame that has precomputed
@@ -267,7 +259,7 @@ def get_max_drawdown_underwater(underwater):
     underwater : pd.Series
        Underwater returns (rolling drawdown) of a strategy.
 
-    Returns
+    Returns:
     -------
     peak : datetime
         The maximum drawdown's peak.
@@ -276,7 +268,6 @@ def get_max_drawdown_underwater(underwater):
     recovery : datetime
         The maximum drawdown's recovery.
     """
-
     valley = underwater.idxmin()  # end of the period
     # Find first 0
     peak = underwater[:valley][underwater[:valley] == 0].index[-1]
@@ -289,8 +280,7 @@ def get_max_drawdown_underwater(underwater):
 
 
 def get_top_drawdowns(returns, top=10):
-    """
-    Finds top drawdowns, sorted by drawdown amount.
+    """Finds top drawdowns, sorted by drawdown amount.
 
     Parameters
     ----------
@@ -300,12 +290,11 @@ def get_top_drawdowns(returns, top=10):
     top : int, optional
         The amount of top drawdowns to find (default 10).
 
-    Returns
+    Returns:
     -------
     drawdowns : list
         List of drawdown peaks, valleys, and recoveries. See get_max_drawdown.
     """
-
     returns = returns.copy()
     df_cum = ep.cum_returns(returns, 1.0)
     running_max = np.maximum.accumulate(df_cum)
@@ -329,8 +318,7 @@ def get_top_drawdowns(returns, top=10):
 
 
 def gen_drawdown_table(returns, top=10):
-    """
-    Places top drawdowns in a table.
+    """Places top drawdowns in a table.
 
     Parameters
     ----------
@@ -340,12 +328,11 @@ def gen_drawdown_table(returns, top=10):
     top : int, optional
         The amount of top drawdowns to find (default 10).
 
-    Returns
+    Returns:
     -------
     df_drawdowns : pd.DataFrame
         Information about top drawdowns.
     """
-
     df_cum = ep.cum_returns(returns, 1.0)
     drawdown_periods = get_top_drawdowns(returns, top=top)
     df_drawdowns = pd.DataFrame(
@@ -380,8 +367,7 @@ def gen_drawdown_table(returns, top=10):
 
 
 def rolling_volatility(returns, rolling_vol_window):
-    """
-    Determines the rolling volatility of a strategy.
+    """Determines the rolling volatility of a strategy.
 
     Parameters
     ----------
@@ -391,18 +377,16 @@ def rolling_volatility(returns, rolling_vol_window):
     rolling_vol_window : int
         Length of rolling window, in days, over which to compute.
 
-    Returns
+    Returns:
     -------
     pd.Series
         Rolling volatility.
     """
-
     return returns.rolling(rolling_vol_window).std() * np.sqrt(APPROX_BDAYS_PER_YEAR)
 
 
 def rolling_sharpe(returns, rolling_sharpe_window):
-    """
-    Determines the rolling Sharpe ratio of a strategy.
+    """Determines the rolling Sharpe ratio of a strategy.
 
     Parameters
     ----------
@@ -412,16 +396,15 @@ def rolling_sharpe(returns, rolling_sharpe_window):
     rolling_sharpe_window : int
         Length of rolling window, in days, over which to compute.
 
-    Returns
+    Returns:
     -------
     pd.Series
         Rolling Sharpe ratio.
 
-    Note
+    Note:
     -----
     See https://en.wikipedia.org/wiki/Sharpe_ratio for more details.
     """
-
     return (
         returns.rolling(rolling_sharpe_window).mean()
         / returns.rolling(rolling_sharpe_window).std()
@@ -430,8 +413,7 @@ def rolling_sharpe(returns, rolling_sharpe_window):
 
 
 def simulate_paths(is_returns, num_days, num_samples=1000, random_seed=None):
-    """
-    Gnerate alternate paths using available values from in-sample returns.
+    """Gnerate alternate paths using available values from in-sample returns.
 
     Parameters
     ----------
@@ -448,11 +430,10 @@ def simulate_paths(is_returns, num_days, num_samples=1000, random_seed=None):
         Seed for the pseudorandom number generator used by the pandas
         sample method.
 
-    Returns
+    Returns:
     -------
     samples : numpy.ndarray
     """
-
     samples = np.empty((num_samples, num_days))
     seed = np.random.RandomState(seed=random_seed)
     for i in range(num_samples):
@@ -461,8 +442,7 @@ def simulate_paths(is_returns, num_days, num_samples=1000, random_seed=None):
 
 
 def summarize_paths(samples, cone_std=(1.0, 1.5, 2.0), starting_value=1.0):
-    """
-    Gnerate the upper and lower bounds of an n standard deviation
+    """Gnerate the upper and lower bounds of an n standard deviation
     cone of forecasted cumulative returns.
 
     Parameters
@@ -474,11 +454,10 @@ def summarize_paths(samples, cone_std=(1.0, 1.5, 2.0), starting_value=1.0):
         the cone. If multiple values are passed, cone bounds will
         be generated for each value.
 
-    Returns
+    Returns:
     -------
     samples : pandas.core.frame.DataFrame
     """
-
     cum_samples = ep.cum_returns(samples.T, starting_value=starting_value).T
 
     cum_mean = cum_samples.mean(axis=0)
@@ -503,8 +482,7 @@ def forecast_cone_bootstrap(
     num_samples=1000,
     random_seed=None,
 ):
-    """
-    Determines the upper and lower bounds of an n standard deviation
+    """Determines the upper and lower bounds of an n standard deviation
     cone of forecasted cumulative returns. Future cumulative mean and
     standard devation are computed by repeatedly sampling from the
     in-sample daily returns (i.e. bootstrap). This cone is non-parametric,
@@ -532,7 +510,7 @@ def forecast_cone_bootstrap(
         Seed for the pseudorandom number generator used by the pandas
         sample method.
 
-    Returns
+    Returns:
     -------
     pd.DataFrame
         Contains upper and lower cone boundaries. Column names are
@@ -540,7 +518,6 @@ def forecast_cone_bootstrap(
         above (positive) or below (negative) the projected mean
         cumulative returns.
     """
-
     samples = simulate_paths(
         is_returns=is_returns,
         num_days=num_days,
@@ -554,8 +531,7 @@ def forecast_cone_bootstrap(
 
 
 def extract_interesting_date_ranges(returns, periods=None):
-    """
-    Extracts returns based on interesting events. See
+    """Extracts returns based on interesting events. See
     gen_date_range_interesting.
 
     Parameters
@@ -564,7 +540,7 @@ def extract_interesting_date_ranges(returns, periods=None):
         Daily returns of the strategy, noncumulative.
          - See full explanation in tears.create_full_tear_sheet.
 
-    Returns
+    Returns:
     -------
     ranges : OrderedDict
         Date ranges, with returns, of all valid events.

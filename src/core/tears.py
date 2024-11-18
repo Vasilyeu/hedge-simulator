@@ -75,8 +75,7 @@ def create_full_tear_sheet(
     header_rows=None,
     factor_partitions=FACTOR_PARTITIONS,
 ):
-    """
-    Generate a number of tear sheets that are useful
+    """Generate a number of tear sheets that are useful
     for analyzing a strategy's performance.
 
     - Fetches benchmarks if needed.
@@ -169,7 +168,6 @@ def create_full_tear_sheet(
         factor returns and risk exposures plots
         - See create_perf_attrib_tear_sheet().
     """
-
     if (unadjusted_returns is None) and (slippage is not None) and (transactions is not None):
         unadjusted_returns = returns.copy()
         returns = txn.adjust_returns_for_slippage(returns, positions, transactions, slippage)
@@ -254,8 +252,7 @@ def create_simple_tear_sheet(
     turnover_denom="AGB",
     header_rows=None,
 ):
-    """
-    Simpler version of create_full_tear_sheet; generates summary performance
+    """Simpler version of create_full_tear_sheet; generates summary performance
     statistics and important plots as a single image.
 
     - Plots: cumulative returns, rolling beta, rolling Sharpe, underwater,
@@ -321,7 +318,6 @@ def create_simple_tear_sheet(
     header_rows : dict or OrderedDict, optional
         Extra rows to display at the top of the perf stats table.
     """
-
     positions = utils.check_intraday(estimate_intraday, returns, positions, transactions)
 
     if (slippage is not None) and (transactions is not None):
@@ -452,8 +448,7 @@ def create_returns_tear_sheet(
     header_rows=None,
     return_fig=False,
 ):
-    """
-    Generate a number of plots for analyzing a strategy's returns.
+    """Generate a number of plots for analyzing a strategy's returns.
 
     - Fetches benchmarks, then creates the plots on a single figure.
     - Plots: rolling returns (with cone), rolling beta, rolling sharpe,
@@ -496,7 +491,6 @@ def create_returns_tear_sheet(
     return_fig : boolean, optional
         If True, returns the figure that was plotted on.
     """
-
     if benchmark_rets is not None:
         returns = utils.clip_returns_to_benchmark(returns, benchmark_rets)
 
@@ -639,8 +633,7 @@ def create_position_tear_sheet(
     estimate_intraday="infer",
     return_fig=False,
 ):
-    """
-    Generate a number of plots for analyzing a
+    """Generate a number of plots for analyzing a
     strategy's positions and holdings.
 
     - Plots: gross leverage, exposures, top positions, and holdings.
@@ -673,7 +666,6 @@ def create_position_tear_sheet(
     return_fig : boolean, optional
         If True, returns the figure that was plotted on.
     """
-
     positions = utils.check_intraday(estimate_intraday, returns, positions, transactions)
 
     if hide_positions:
@@ -740,8 +732,7 @@ def create_txn_tear_sheet(
     estimate_intraday="infer",
     return_fig=False,
 ):
-    """
-    Generate a number of plots for analyzing a strategy's transactions.
+    """Generate a number of plots for analyzing a strategy's transactions.
 
     Plots: turnover, daily volume, and a histogram of daily volume.
 
@@ -770,7 +761,6 @@ def create_txn_tear_sheet(
     return_fig : boolean, optional
         If True, returns the figure that was plotted on.
     """
-
     positions = utils.check_intraday(estimate_intraday, returns, positions, transactions)
 
     vertical_sections = 6 if unadjusted_returns is not None else 4
@@ -836,8 +826,7 @@ def create_round_trip_tear_sheet(
     estimate_intraday="infer",
     return_fig=False,
 ):
-    """
-    Generate a number of figures and plots describing the duration,
+    """Generate a number of figures and plots describing the duration,
     frequency, and profitability of trade "round trips."
     A round trip is started when a new long or short position is
     opened and is only completed when the number of shares in that
@@ -863,7 +852,6 @@ def create_round_trip_tear_sheet(
     return_fig : boolean, optional
         If True, returns the figure that was plotted on.
     """
-
     positions = utils.check_intraday(estimate_intraday, returns, positions, transactions)
 
     transactions_closed = round_trips.add_closing_transactions(positions, transactions)
@@ -928,8 +916,7 @@ def create_interesting_times_tear_sheet(
     legend_loc="best",
     return_fig=False,
 ):
-    """
-    Generate a number of returns plots around interesting points in time,
+    """Generate a number of returns plots around interesting points in time,
     like the flash crash and 9/11.
 
     Plots: returns around the dotcom bubble burst, Lehmann Brothers' failure,
@@ -956,7 +943,6 @@ def create_interesting_times_tear_sheet(
     return_fig : boolean, optional
         If True, returns the figure that was plotted on.
     """
-
     rets_interesting = timeseries.extract_interesting_date_ranges(returns, periods)
 
     if not rets_interesting:
@@ -1021,8 +1007,7 @@ def create_capacity_tear_sheet(
     estimate_intraday="infer",
     return_fig=False,
 ):
-    """
-    Generates a report detailing portfolio size constraints set by
+    """Generates a report detailing portfolio size constraints set by
     least liquid tickers. Plots a "capacity sweep," a curve describing
     projected sharpe ratio given the slippage penalties that are
     applied at various capital bases.
@@ -1060,7 +1045,6 @@ def create_capacity_tear_sheet(
     return_fig : boolean, optional
         If True, returns the figure that was plotted on.
     """
-
     positions = utils.check_intraday(estimate_intraday, returns, positions, transactions)
 
     print(
@@ -1093,22 +1077,20 @@ def create_capacity_tear_sheet(
     )
     max_days_by_ticker_lnd.index = max_days_by_ticker_lnd.index.map(utils.format_asset)
 
-    print("Last {} trading days:".format(last_n_days))
+    print(f"Last {last_n_days} trading days:")
     utils.print_table(max_days_by_ticker_lnd[max_days_by_ticker_lnd.days_to_liquidate > 1])
 
     llt = capacity.get_low_liquidity_transactions(transactions, market_data)
     llt.index = llt.index.map(utils.format_asset)
 
     print(
-        "Tickers with daily transactions consuming >{}% of daily bar \n" "all backtest:".format(
-            trade_daily_vol_limit * 100
-        )
+        f"Tickers with daily transactions consuming >{trade_daily_vol_limit * 100}% of daily bar \n" "all backtest:"
     )
     utils.print_table(llt[llt["max_pct_bar_consumed"] > trade_daily_vol_limit * 100])
 
     llt = capacity.get_low_liquidity_transactions(transactions, market_data, last_n_days=last_n_days)
 
-    print("Last {} trading days:".format(last_n_days))
+    print(f"Last {last_n_days} trading days:")
     utils.print_table(llt[llt["max_pct_bar_consumed"] > trade_daily_vol_limit * 100])
 
     bt_starting_capital = positions.iloc[0].sum() / (1 + returns.iloc[0])
@@ -1139,8 +1121,7 @@ def create_perf_attrib_tear_sheet(
     factor_partitions=FACTOR_PARTITIONS,
     return_fig=False,
 ):
-    """
-    Generate plots and tables for analyzing a strategy's performance.
+    """Generate plots and tables for analyzing a strategy's performance.
 
     Parameters
     ----------

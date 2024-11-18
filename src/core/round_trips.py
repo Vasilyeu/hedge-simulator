@@ -1,5 +1,4 @@
-"""
-Round trips module
+"""Round trips module
 """
 
 import warnings
@@ -91,7 +90,7 @@ def _groupby_consecutive(transactions, max_delta=pd.Timedelta("8h")):
         than max_delta time duration.
 
 
-    Returns
+    Returns:
     -------
     transactions : pd.DataFrame
 
@@ -165,7 +164,7 @@ def extract_round_trips(transactions, portfolio_value=None):
         Note that portfolio_value needs to beginning of day, so either
         use .shift() or positions.sum(axis='columns') / (1+returns).
 
-    Returns
+    Returns:
     -------
     round_trips : pd.DataFrame
         dataset with one row per-round trip.  The 'returns' column
@@ -173,7 +172,6 @@ def extract_round_trips(transactions, portfolio_value=None):
         rt_returns are the returns regarding the invested capital
         into that particular round-trip.
     """
-
     transactions = _groupby_consecutive(transactions)
     roundtrips = []
 
@@ -244,8 +242,7 @@ def extract_round_trips(transactions, portfolio_value=None):
 
 
 def add_closing_transactions(positions, transactions):
-    """
-    Appends transactions that close out all positions at the end of
+    """Appends transactions that close out all positions at the end of
     the timespan covered by positions data. Utilizes pricing information
     in the positions DataFrame to determine closing price.
 
@@ -257,12 +254,11 @@ def add_closing_transactions(positions, transactions):
         Prices and amounts of executed round_trips. One row per trade.
         - See full explanation in tears.create_full_tear_sheet
 
-    Returns
+    Returns:
     -------
     closed_txns : pd.DataFrame
         Transactions with closing transactions appended.
     """
-
     closed_txns = transactions[["symbol", "amount", "price"]]
 
     pos_at_end = positions.drop("cash", axis=1).iloc[-1]
@@ -294,8 +290,7 @@ def add_closing_transactions(positions, transactions):
 
 
 def apply_sector_mappings_to_round_trips(round_trips, sector_mappings):
-    """
-    Translates round trip symbols to sectors.
+    """Translates round trip symbols to sectors.
 
     Parameters
     ----------
@@ -306,12 +301,11 @@ def apply_sector_mappings_to_round_trips(round_trips, sector_mappings):
         Security identifier to sector mapping.
         Security ids as keys, sectors as values.
 
-    Returns
+    Returns:
     -------
     sector_round_trips : pd.DataFrame
         Round trips with symbol names replaced by sector names.
     """
-
     sector_round_trips = round_trips.copy()
     sector_round_trips.symbol = sector_round_trips.symbol.apply(lambda x: sector_mappings.get(x, "No Sector Mapping"))
     sector_round_trips = sector_round_trips.dropna(axis=0)
@@ -328,17 +322,16 @@ def gen_round_trip_stats(round_trips):
         DataFrame with one row per round trip trade.
         - See full explanation in round_trips.extract_round_trips
 
-    Returns
+    Returns:
     -------
     stats : dict
        A dictionary where each value is a pandas DataFrame containing
        various round-trip statistics.
 
-    See also
+    See Also:
     --------
     round_trips.print_round_trip_stats
     """
-
     stats = {
         "pnl": agg_all_long_short(round_trips, "pnl", PNL_STATS),
         "summary": agg_all_long_short(round_trips, "pnl", SUMMARY_STATS),
@@ -362,11 +355,10 @@ def print_round_trip_stats(round_trips, hide_pos=False):
 
     hide_pos: bool, optional
 
-    See also
+    See Also:
     --------
     round_trips.gen_round_trip_stats
     """
-
     stats = gen_round_trip_stats(round_trips)
 
     print_table(stats["summary"], float_format="{:.2f}".format, name="Summary stats")

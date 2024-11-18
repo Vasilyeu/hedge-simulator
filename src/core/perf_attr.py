@@ -1,5 +1,4 @@
-"""
-Performance attributes
+"""Performance attributes
 """
 
 from collections import OrderedDict
@@ -7,8 +6,7 @@ import pandas as pd
 
 
 def perf_attrib(returns, positions, factor_returns, factor_loadings):
-    """
-    Attributes the performance of a return stream to a set of risk factors.
+    """Attributes the performance of a return stream to a set of risk factors.
 
     Performance attribution determines how much each risk factor, e.g.,
     momentum, the technology sector, etc., contributed to total returns, as
@@ -58,7 +56,7 @@ def perf_attrib(returns, positions, factor_returns, factor_loadings):
                        TLT    -1.066978  0.185435
                        XOM    -1.798401  0.761549
 
-    Returns
+    Returns:
     -------
     tuple of (risk_exposures_portfolio, perf_attribution)
 
@@ -78,11 +76,10 @@ def perf_attrib(returns, positions, factor_returns, factor_loadings):
             2017-01-01  0.249087  0.935925        1.185012          1.185012
             2017-01-02 -0.003194 -0.400786       -0.403980         -0.403980
 
-    Note
+    Note:
     ----
     See https://en.wikipedia.org/wiki/Performance_attribution for more details.
     """
-
     # track freq info to reassign to return values
     freq = returns.index.freq
 
@@ -128,8 +125,7 @@ def perf_attrib(returns, positions, factor_returns, factor_loadings):
 
 
 def compute_exposures(positions, factor_loadings):
-    """
-    Compute daily risk factor exposures.
+    """Compute daily risk factor exposures.
 
     Parameters
     ----------
@@ -157,7 +153,7 @@ def compute_exposures(positions, factor_loadings):
                        TLT    -1.066978  0.185435
                        XOM    -1.798401  0.761549
 
-    Returns
+    Returns:
     -------
     risk_exposures_portfolio : pd.DataFrame
         df indexed by datetime, with factors as columns

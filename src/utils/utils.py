@@ -1,5 +1,4 @@
-"""
-Utility functions
+"""Utility functions
 """
 
 from datetime import date, timedelta

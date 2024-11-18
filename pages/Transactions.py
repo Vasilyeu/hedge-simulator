@@ -1,5 +1,4 @@
-"""
-Page for transaction management
+"""Page for transaction management
 """
 
 import datetime
@@ -11,8 +10,7 @@ from src.performance.portfolio import build_portfolio_from_transactions
 
 
 def build_portfolio_with_benchmark(transactions: pd.DataFrame, benchmark_ticker: str) -> None:
-    """
-    Build portfolio from transactions and calculate performance compared to benchmark.
+    """Build portfolio from transactions and calculate performance compared to benchmark.
     Save portfolio, benchmark portfolio and performance table in session state
     :param transactions: pandas DataFrame with transactions
     :param benchmark_ticker: string, benchmark ticker

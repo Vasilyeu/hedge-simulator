@@ -1,5 +1,4 @@
-"""
-Hedging calculations module
+"""Hedging calculations module
 """
 
 import numpy as np

@@ -25,8 +25,7 @@ from .utils import APPROX_BDAYS_PER_MONTH, MM_DISPLAY_UNIT
 
 
 def customize(func):
-    """
-    Decorator to set plotting context and axes style during function call.
+    """Decorator to set plotting context and axes style during function call.
     """
 
     @wraps(func)
@@ -42,8 +41,7 @@ def customize(func):
 
 
 def plotting_context(context="notebook", font_scale=1.5, rc=None):
-    """
-    Create pyfolio default plotting style context.
+    """Create pyfolio default plotting style context.
 
     Under the hood, calls and returns seaborn.plotting_context() with
     some custom settings. Usually you would use in a with-context.
@@ -60,16 +58,16 @@ def plotting_context(context="notebook", font_scale=1.5, rc=None):
         is being used and will be added to any
         rc passed in, unless explicitly overriden.
 
-    Returns
+    Returns:
     -------
     seaborn plotting context
 
-    Example
+    Example:
     -------
      with plotting.plotting_context(font_scale=2):
         tears.create_full_tear_sheet(..., set_context=False)
 
-    See also
+    See Also:
     --------
     For more information, see seaborn.plotting_context().
 
@@ -87,8 +85,7 @@ def plotting_context(context="notebook", font_scale=1.5, rc=None):
 
 
 def axes_style(style="darkgrid", rc=None):
-    """
-    Create pyfolio default axes style context.
+    """Create pyfolio default axes style context.
 
     Under the hood, calls and returns seaborn.axes_style() with
     some custom settings. Usually you would use in a with-context.
@@ -100,16 +97,16 @@ def axes_style(style="darkgrid", rc=None):
     rc : dict, optional
         Config flags.
 
-    Returns
+    Returns:
     -------
     seaborn plotting context
 
-    Example
+    Example:
     -------
     with pyfolio.plotting.axes_style(style='whitegrid'):
         pyfolio.create_full_tear_sheet(..., set_context=False)
 
-    See also
+    See Also:
     --------
     For more information, see seaborn.plotting_context().
 
@@ -127,8 +124,7 @@ def axes_style(style="darkgrid", rc=None):
 
 
 def plot_monthly_returns_heatmap(returns, ax=None, **kwargs):
-    """
-    Plots a heatmap of returns by month.
+    """Plots a heatmap of returns by month.
 
     Parameters
     ----------
@@ -140,12 +136,11 @@ def plot_monthly_returns_heatmap(returns, ax=None, **kwargs):
     **kwargs, optional
         Passed to seaborn plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -172,8 +167,7 @@ def plot_monthly_returns_heatmap(returns, ax=None, **kwargs):
 
 
 def plot_annual_returns(returns, ax=None, **kwargs):
-    """
-    Plots a bar graph of returns by year.
+    """Plots a bar graph of returns by year.
 
     Parameters
     ----------
@@ -185,12 +179,11 @@ def plot_annual_returns(returns, ax=None, **kwargs):
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -218,8 +211,7 @@ def plot_annual_returns(returns, ax=None, **kwargs):
 
 
 def plot_monthly_returns_dist(returns, ax=None, **kwargs):
-    """
-    Plots a distribution of monthly returns.
+    """Plots a distribution of monthly returns.
 
     Parameters
     ----------
@@ -231,12 +223,11 @@ def plot_monthly_returns_dist(returns, ax=None, **kwargs):
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -271,8 +262,7 @@ def plot_monthly_returns_dist(returns, ax=None, **kwargs):
 
 
 def plot_holdings(returns, positions, legend_loc="best", ax=None, **kwargs):
-    """
-    Plots total amount of stocks with an active position, either short
+    """Plots total amount of stocks with an active position, either short
     or long. Displays daily total, daily average per month, and
     all-time daily average.
 
@@ -291,12 +281,11 @@ def plot_holdings(returns, positions, legend_loc="best", ax=None, **kwargs):
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -328,8 +317,7 @@ def plot_holdings(returns, positions, legend_loc="best", ax=None, **kwargs):
 
 
 def plot_long_short_holdings(returns, positions, legend_loc="upper left", ax=None, **kwargs):
-    """
-    Plots total amount of stocks with an active position, breaking out
+    """Plots total amount of stocks with an active position, breaking out
     short and long into transparent filled regions.
 
     Parameters
@@ -347,13 +335,12 @@ def plot_long_short_holdings(returns, positions, legend_loc="upper left", ax=Non
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
 
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -386,8 +373,7 @@ def plot_long_short_holdings(returns, positions, legend_loc="upper left", ax=Non
 
 
 def plot_drawdown_periods(returns, top=10, ax=None, **kwargs):
-    """
-    Plots cumulative returns highlighting top drawdown periods.
+    """Plots cumulative returns highlighting top drawdown periods.
 
     Parameters
     ----------
@@ -401,12 +387,11 @@ def plot_drawdown_periods(returns, top=10, ax=None, **kwargs):
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -434,8 +419,7 @@ def plot_drawdown_periods(returns, top=10, ax=None, **kwargs):
 
 
 def plot_drawdown_underwater(returns, ax=None, **kwargs):
-    """
-    Plots how far underwaterr returns are over time, or plots current
+    """Plots how far underwaterr returns are over time, or plots current
     drawdown vs. date.
 
     Parameters
@@ -448,12 +432,11 @@ def plot_drawdown_underwater(returns, ax=None, **kwargs):
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -471,8 +454,7 @@ def plot_drawdown_underwater(returns, ax=None, **kwargs):
 
 
 def plot_perf_stats(returns, factor_returns, ax=None):
-    """
-    Create box plot of some performance metrics of the strategy.
+    """Create box plot of some performance metrics of the strategy.
     The width of the box whiskers is determined by a bootstrap.
 
     Parameters
@@ -487,12 +469,11 @@ def plot_perf_stats(returns, factor_returns, ax=None):
     ax : matplotlib.Axes, optional
         Axes upon which to plot.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -525,8 +506,7 @@ def show_perf_stats(
     header_rows=None,
     return_df=False,
 ):
-    """
-    Prints some performance metrics of the strategy.
+    """Prints some performance metrics of the strategy.
 
     - Shows amount of time the strategy has been run in backtest and
       out-of-sample (in live trading).
@@ -562,7 +542,6 @@ def show_perf_stats(
     header_rows : dict or OrderedDict, optional
         Extra rows to display at the top of the displayed table.
     """
-
     if bootstrap:
         perf_func = timeseries.perf_stats_bootstrap
     else:
@@ -652,8 +631,7 @@ def show_perf_stats(
 
 
 def plot_returns(returns, live_start_date=None, ax=None):
-    """
-    Plots raw returns over time.
+    """Plots raw returns over time.
 
     Backtest returns are in green, and out-of-sample (live trading)
     returns are in red.
@@ -671,12 +649,11 @@ def plot_returns(returns, live_start_date=None, ax=None):
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -708,8 +685,7 @@ def plot_rolling_returns(
     ax=None,
     **kwargs,
 ):
-    """
-    Plots cumulative rolling returns versus some benchmarks'.
+    """Plots cumulative rolling returns versus some benchmarks'.
 
     Backtest returns are in green, and out-of-sample (live trading)
     returns are in red.
@@ -754,12 +730,11 @@ def plot_rolling_returns(
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -832,8 +807,7 @@ def plot_rolling_returns(
 
 
 def plot_rolling_beta(returns, factor_returns, legend_loc="best", ax=None, **kwargs):
-    """
-    Plots the rolling 6-month and 12-month beta versus date.
+    """Plots the rolling 6-month and 12-month beta versus date.
 
     Parameters
     ----------
@@ -851,12 +825,11 @@ def plot_rolling_beta(returns, factor_returns, legend_loc="best", ax=None, **kwa
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -891,8 +864,7 @@ def plot_rolling_volatility(
     ax=None,
     **kwargs,
 ):
-    """
-    Plots the rolling volatility versus date.
+    """Plots the rolling volatility versus date.
 
     Parameters
     ----------
@@ -913,12 +885,11 @@ def plot_rolling_volatility(
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -963,8 +934,7 @@ def plot_rolling_sharpe(
     ax=None,
     **kwargs,
 ):
-    """
-    Plots the rolling Sharpe ratio versus date.
+    """Plots the rolling Sharpe ratio versus date.
 
     Parameters
     ----------
@@ -985,12 +955,11 @@ def plot_rolling_sharpe(
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -1024,8 +993,7 @@ def plot_rolling_sharpe(
 
 
 def plot_gross_leverage(returns, positions, ax=None, **kwargs):
-    """
-    Plots gross leverage versus date.
+    """Plots gross leverage versus date.
 
     Gross leverage is the sum of long and short exposure per share
     divided by net asset value.
@@ -1043,12 +1011,11 @@ def plot_gross_leverage(returns, positions, ax=None, **kwargs):
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
     gl = ep.gross_lev(positions)
@@ -1063,8 +1030,7 @@ def plot_gross_leverage(returns, positions, ax=None, **kwargs):
 
 
 def plot_exposures(returns, positions, ax=None, **kwargs):
-    """
-    Plots a cake chart of the long and short exposure.
+    """Plots a cake chart of the long and short exposure.
 
     Parameters
     ----------
@@ -1079,12 +1045,11 @@ def plot_exposures(returns, positions, ax=None, **kwargs):
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -1120,8 +1085,7 @@ def show_and_plot_top_positions(
     ax=None,
     **kwargs,
 ):
-    """
-    Prints and/or plots the exposures of the top 10 held positions of
+    """Prints and/or plots the exposures of the top 10 held positions of
     all time.
 
     Parameters
@@ -1144,7 +1108,7 @@ def show_and_plot_top_positions(
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes, conditional
         The axes that were plotted on.
@@ -1218,8 +1182,7 @@ def show_and_plot_top_positions(
 
 
 def plot_max_median_position_concentration(positions, ax=None, **kwargs):
-    """
-    Plots the max and median of long and short position concentrations
+    """Plots the max and median of long and short position concentrations
     over the time.
 
     Parameters
@@ -1229,12 +1192,11 @@ def plot_max_median_position_concentration(positions, ax=None, **kwargs):
     ax : matplotlib.Axes, optional
         Axes upon which to plot.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -1250,8 +1212,7 @@ def plot_max_median_position_concentration(positions, ax=None, **kwargs):
 
 
 def plot_sector_allocations(returns, sector_alloc, ax=None, **kwargs):
-    """
-    Plots the sector exposures of the portfolio over time.
+    """Plots the sector exposures of the portfolio over time.
 
     Parameters
     ----------
@@ -1265,12 +1226,11 @@ def plot_sector_allocations(returns, sector_alloc, ax=None, **kwargs):
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -1296,8 +1256,7 @@ def plot_sector_allocations(returns, sector_alloc, ax=None, **kwargs):
 
 
 def plot_return_quantiles(returns, live_start_date=None, ax=None, **kwargs):
-    """
-    Creates a box plot of daily, weekly, and monthly return
+    """Creates a box plot of daily, weekly, and monthly return
     distributions.
 
     Parameters
@@ -1313,12 +1272,11 @@ def plot_return_quantiles(returns, live_start_date=None, ax=None, **kwargs):
     **kwargs, optional
         Passed to seaborn plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -1368,8 +1326,7 @@ def plot_turnover(
     ax=None,
     **kwargs,
 ):
-    """
-    Plots turnover vs. date.
+    """Plots turnover vs. date.
 
     Turnover is the number of shares traded for a period as a fraction
     of total shares.
@@ -1398,12 +1355,11 @@ def plot_turnover(
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -1441,8 +1397,7 @@ def plot_slippage_sweep(
     ax=None,
     **kwargs,
 ):
-    """
-    Plots equity curves at different per-dollar slippage assumptions.
+    """Plots equity curves at different per-dollar slippage assumptions.
 
     Parameters
     ----------
@@ -1463,12 +1418,11 @@ def plot_slippage_sweep(
     **kwargs, optional
         Passed to seaborn plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -1489,8 +1443,7 @@ def plot_slippage_sweep(
 
 
 def plot_slippage_sensitivity(returns, positions, transactions, ax=None, **kwargs):
-    """
-    Plots curve relating per-dollar slippage to average annual returns.
+    """Plots curve relating per-dollar slippage to average annual returns.
 
     Parameters
     ----------
@@ -1508,12 +1461,11 @@ def plot_slippage_sensitivity(returns, positions, transactions, ax=None, **kwarg
     **kwargs, optional
         Passed to seaborn plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -1566,8 +1518,7 @@ def plot_capacity_sweep(
 
 
 def plot_daily_turnover_hist(transactions, positions, turnover_denom="AGB", ax=None, **kwargs):
-    """
-    Plots a histogram of daily turnover rates.
+    """Plots a histogram of daily turnover rates.
 
     Parameters
     ----------
@@ -1585,12 +1536,11 @@ def plot_daily_turnover_hist(transactions, positions, turnover_denom="AGB", ax=N
     **kwargs, optional
         Passed to seaborn plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
     turnover = txn.get_turnover(positions, transactions, turnover_denom)
@@ -1601,8 +1551,7 @@ def plot_daily_turnover_hist(transactions, positions, turnover_denom="AGB", ax=N
 
 
 def plot_daily_volume(returns, transactions, ax=None, **kwargs):
-    """
-    Plots trading volume per day vs. date.
+    """Plots trading volume per day vs. date.
 
     Also displays all-time daily average.
 
@@ -1619,12 +1568,11 @@ def plot_daily_volume(returns, transactions, ax=None, **kwargs):
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
     daily_txn = txn.get_txn_vol(transactions)
@@ -1644,8 +1592,7 @@ def plot_daily_volume(returns, transactions, ax=None, **kwargs):
 
 
 def plot_txn_time_hist(transactions, bin_minutes=5, tz="America/New_York", ax=None, **kwargs):
-    """
-    Plots a histogram of transaction times, binning the times into
+    """Plots a histogram of transaction times, binning the times into
     buckets of a given duration.
 
     Parameters
@@ -1664,12 +1611,11 @@ def plot_txn_time_hist(transactions, bin_minutes=5, tz="America/New_York", ax=No
     **kwargs, optional
         Passed to plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -1699,8 +1645,7 @@ def plot_txn_time_hist(transactions, bin_minutes=5, tz="America/New_York", ax=No
 
 
 def show_worst_drawdown_periods(returns, top=5):
-    """
-    Prints information about the worst drawdown periods.
+    """Prints information about the worst drawdown periods.
 
     Prints peak dates, valley dates, recovery dates, and net
     drawdowns.
@@ -1713,7 +1658,6 @@ def show_worst_drawdown_periods(returns, top=5):
     top : int, optional
         Amount of top drawdowns periods to plot (default 5).
     """
-
     drawdown_df = timeseries.gen_drawdown_table(returns, top=top)
     utils.print_table(
         drawdown_df.sort_values("Net drawdown in %", ascending=False),
@@ -1723,8 +1667,7 @@ def show_worst_drawdown_periods(returns, top=5):
 
 
 def plot_monthly_returns_timeseries(returns, ax=None, **kwargs):
-    """
-    Plots monthly returns as a timeseries.
+    """Plots monthly returns as a timeseries.
 
     Parameters
     ----------
@@ -1736,7 +1679,7 @@ def plot_monthly_returns_timeseries(returns, ax=None, **kwargs):
     **kwargs, optional
         Passed to seaborn plotting function.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
@@ -1777,8 +1720,7 @@ def plot_monthly_returns_timeseries(returns, ax=None, **kwargs):
 
 
 def plot_round_trip_lifetimes(round_trips, disp_amount=16, lsize=18, ax=None):
-    """
-    Plots timespans and directions of a sample of round trip trades.
+    """Plots timespans and directions of a sample of round trip trades.
 
     Parameters
     ----------
@@ -1788,12 +1730,11 @@ def plot_round_trip_lifetimes(round_trips, disp_amount=16, lsize=18, ax=None):
     ax : matplotlib.Axes, optional
         Axes upon which to plot.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     if ax is None:
         ax = plt.subplot()
 
@@ -1834,8 +1775,7 @@ def plot_round_trip_lifetimes(round_trips, disp_amount=16, lsize=18, ax=None):
 
 
 def show_profit_attribution(round_trips):
-    """
-    Prints the share of total PnL contributed by each
+    """Prints the share of total PnL contributed by each
     traded name.
 
     Parameters
@@ -1846,12 +1786,11 @@ def show_profit_attribution(round_trips):
     ax : matplotlib.Axes, optional
         Axes upon which to plot.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     total_pnl = round_trips["pnl"].sum()
     pnl_attribution = round_trips.groupby("symbol")["pnl"].sum() / total_pnl
     pnl_attribution.name = ""
@@ -1868,8 +1807,7 @@ def show_profit_attribution(round_trips):
 
 
 def plot_prob_profit_trade(round_trips, ax=None):
-    """
-    Plots a probability distribution for the event of making
+    """Plots a probability distribution for the event of making
     a profitable trade.
 
     Parameters
@@ -1880,12 +1818,11 @@ def plot_prob_profit_trade(round_trips, ax=None):
     ax : matplotlib.Axes, optional
         Axes upon which to plot.
 
-    Returns
+    Returns:
     -------
     ax : matplotlib.Axes
         The axes that were plotted on.
     """
-
     x = np.linspace(0, 1.0, 500)
 
     round_trips["profitable"] = round_trips.pnl > 0
@@ -1923,8 +1860,7 @@ def plot_cones(
     random_seed=None,
     num_strikes=3,
 ):
-    """
-    Plots the upper and lower bounds of an n standard deviation
+    """Plots the upper and lower bounds of an n standard deviation
     cone of forecasted cumulative returns. Redraws a new cone when
     cumulative returns fall outside of last cone drawn.
 
@@ -1956,7 +1892,7 @@ def plot_cones(
     num_strikes : int
         Upper limit for number of cones drawn. Can be anything from 0 to 3.
 
-    Returns
+    Returns:
     -------
     Returns are either an ax or fig option, but not both. If a
     matplotlib.Axes instance is passed in as ax, then it will be modified
@@ -1970,7 +1906,6 @@ def plot_cones(
     fig : matplotlib.figure
         The figure instance which contains all the plot elements.
     """
-
     if ax is None:
         fig = figure.Figure(figsize=(10, 8))
         FigureCanvasAgg(fig)
@@ -1989,7 +1924,7 @@ def plot_cones(
             tmp = returns.loc[cone_start:]
             bounds_tmp = bounds_tmp.iloc[0 : len(tmp)]
             bounds_tmp = bounds_tmp.set_index(tmp.index)
-            crossing = tmp < bounds_tmp[float(-2.0)].iloc[: len(tmp)]
+            crossing = tmp < bounds_tmp[-2.0].iloc[: len(tmp)]
             if crossing.sum() <= 0:
                 break
             cone_start = crossing.loc[crossing].index[0]
@@ -2002,7 +1937,7 @@ def plot_cones(
             axes.fill_between(x, y1, y2, color=colors[c], alpha=0.5)
 
     # Plot returns line graph
-    label = "Cumulative returns = {:.2f}%".format((returns.iloc[-1] - 1) * 100)
+    label = f"Cumulative returns = {(returns.iloc[-1] - 1) * 100:.2f}%"
     axes.plot(returns.index, returns.values, color="black", lw=2.0, label=label)
 
     if name is not None:

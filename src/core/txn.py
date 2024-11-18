@@ -1,25 +1,22 @@
-"""
-Transactions module
+"""Transactions module
 """
 
 import pandas as pd
 
 
 def map_transaction(txn):
-    """
-    Maps a single transaction row to a dictionary.
+    """Maps a single transaction row to a dictionary.
 
     Parameters
     ----------
     txn : pd.DataFrame
         A single transaction object to convert to a dictionary.
 
-    Returns
+    Returns:
     -------
     dict
         Mapped transaction.
     """
-
     if isinstance(txn["sid"], dict):
         sid = txn["sid"]["sid"]
         symbol = txn["sid"]["symbol"]
@@ -39,21 +36,19 @@ def map_transaction(txn):
 
 
 def make_transaction_frame(transactions):
-    """
-    Formats a transaction DataFrame.
+    """Formats a transaction DataFrame.
 
     Parameters
     ----------
     transactions : pd.DataFrame
         Contains improperly formatted transactional data.
 
-    Returns
+    Returns:
     -------
     df : pd.DataFrame
         Daily transaction volume and dollar amount.
          - See full explanation in tears.create_full_tear_sheet.
     """
-
     transaction_list = []
     for dt in transactions.index:
         txns = transactions.loc[dt]
@@ -71,8 +66,7 @@ def make_transaction_frame(transactions):
 
 
 def get_txn_vol(transactions):
-    """
-    Extract daily transaction data from a set of transaction objects.
+    """Extract daily transaction data from a set of transaction objects.
 
     Parameters
     ----------
@@ -81,13 +75,12 @@ def get_txn_vol(transactions):
         duplicate datetime indices) and columns for amount and
         price.
 
-    Returns
+    Returns:
     -------
     pd.DataFrame
         Daily transaction volume and number of shares.
          - See full explanation in tears.create_full_tear_sheet.
     """
-
     txn_norm = transactions.copy()
     txn_norm.index = txn_norm.index.normalize()
     amounts = txn_norm.amount.abs()
@@ -101,8 +94,7 @@ def get_txn_vol(transactions):
 
 
 def adjust_returns_for_slippage(returns, positions, transactions, slippage_bps):
-    """
-    Apply a slippage penalty for every dollar traded.
+    """Apply a slippage penalty for every dollar traded.
 
     Parameters
     ----------
@@ -118,12 +110,11 @@ def adjust_returns_for_slippage(returns, positions, transactions, slippage_bps):
     slippage_bps: int/float
         Basis points of slippage to apply.
 
-    Returns
+    Returns:
     -------
     pd.Series
         Time series of daily returns, adjusted for slippage.
     """
-
     slippage = 0.0001 * slippage_bps
     portfolio_value = positions.sum(axis=1)
     pnl = portfolio_value * returns
@@ -136,8 +127,7 @@ def adjust_returns_for_slippage(returns, positions, transactions, slippage_bps):
 
 
 def get_turnover(positions, transactions, denominator="AGB"):
-    """
-     - Value of purchases and sales divided by either the actual
+    """- Value of purchases and sales divided by either the actual
      gross book or the portfolio value for the time step.
 
     Parameters
@@ -161,12 +151,11 @@ def get_turnover(positions, transactions, denominator="AGB"):
         - Portfolio_value is the total value of the algo's
         positions end-of-period, including cash.
 
-    Returns
+    Returns:
     -------
     turnover_rate : pd.Series
         timeseries of portfolio turnover rates.
     """
-
     txn_vol = get_txn_vol(transactions)
     traded_value = txn_vol.txn_volume
 

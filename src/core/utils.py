@@ -59,36 +59,28 @@ pandas_one_point_three_or_less = pandas_version < Version("1.4")
 
 
 def one_dec_places(x, pos):
+    """Adds 1/10th decimal to plot ticks.
     """
-    Adds 1/10th decimal to plot ticks.
-    """
-
     return "%.1f" % x
 
 
 def two_dec_places(x, pos):
+    """Adds 1/100th decimal to plot ticks.
     """
-    Adds 1/100th decimal to plot ticks.
-    """
-
     return "%.2f" % x
 
 
 def percentage(x, pos):
+    """Adds percentage sign to plot ticks.
     """
-    Adds percentage sign to plot ticks.
-    """
-
     return "%.0f%%" % x
 
 
 def format_asset(asset):
-    """
-    If zipline asset objects are used, we want to print them out prettily
+    """If zipline asset objects are used, we want to print them out prettily
     within the tear sheet. This function should only be applied directly
     before displaying.
     """
-
     try:
         import zipline.assets
     except ImportError:
@@ -101,8 +93,7 @@ def format_asset(asset):
 
 
 def vectorize(func):
-    """
-    Decorator so that functions can be written to work on Series but
+    """Decorator so that functions can be written to work on Series but
     may still be called with DataFrames.
     """
 
@@ -116,8 +107,7 @@ def vectorize(func):
 
 
 def extract_rets_pos_txn_from_zipline(backtest):
-    """
-    Extract returns, positions, transactions and leverage from the
+    """Extract returns, positions, transactions and leverage from the
     backtest data structure returned by zipline.TradingAlgorithm.run().
 
     The returned data structures are in a format compatible with the
@@ -129,7 +119,7 @@ def extract_rets_pos_txn_from_zipline(backtest):
     backtest : pd.DataFrame
         DataFrame returned by zipline.TradingAlgorithm.run()
 
-    Returns
+    Returns:
     -------
     returns : pd.Series
         Daily returns of strategy.
@@ -150,7 +140,6 @@ def extract_rets_pos_txn_from_zipline(backtest):
          pyfolio.tears.create_full_tear_sheet(returns,
          positions, transactions)
     """
-
     backtest.index = backtest.index.normalize()
     if backtest.index.tzinfo is None:
         backtest.index = backtest.index.tz_localize("UTC")
@@ -172,8 +161,7 @@ def extract_rets_pos_txn_from_zipline(backtest):
 
 
 def print_table(table, name=None, float_format=None, formatters=None, header_rows=None):
-    """
-    Pretty print a pandas DataFrame.
+    """Pretty print a pandas DataFrame.
 
     Uses HTML output if running inside Jupyter Notebook, otherwise
     formatted text output.
@@ -194,7 +182,6 @@ def print_table(table, name=None, float_format=None, formatters=None, header_row
     header_rows : dict, optional
         Extra rows to display at the top of the table.
     """
-
     if isinstance(table, pd.Series):
         table = pd.DataFrame(table)
 
@@ -223,26 +210,23 @@ def print_table(table, name=None, float_format=None, formatters=None, header_row
 
 
 def standardize_data(x):
-    """
-    Standardize an array with mean and standard deviation.
+    """Standardize an array with mean and standard deviation.
 
     Parameters
     ----------
     x : np.array
         Array to standardize.
 
-    Returns
+    Returns:
     -------
     np.array
         Standardized array.
     """
-
     return (x - np.mean(x)) / np.std(x)
 
 
 def detect_intraday(positions, transactions, threshold=0.25):
-    """
-    Attempt to detect an intraday strategy. Get the number of
+    """Attempt to detect an intraday strategy. Get the number of
     positions held at the end of the day, and divide that by the
     number of unique stocks transacted every day. If the average quotient
     is below a threshold, then an intraday strategy is detected.
@@ -256,12 +240,11 @@ def detect_intraday(positions, transactions, threshold=0.25):
         Prices and amounts of executed trades. One row per trade.
          - See full explanation in create_full_tear_sheet.
 
-    Returns
+    Returns:
     -------
     boolean
         True if an intraday strategy is detected.
     """
-
     daily_txn = transactions.copy()
     daily_txn.index = daily_txn.index.date
     txn_count = daily_txn.groupby(level=0).symbol.nunique().sum()
@@ -270,8 +253,7 @@ def detect_intraday(positions, transactions, threshold=0.25):
 
 
 def check_intraday(estimate, returns, positions, transactions):
-    """
-    Logic for checking if a strategy is intraday and processing it.
+    """Logic for checking if a strategy is intraday and processing it.
 
     Parameters
     ----------
@@ -288,12 +270,11 @@ def check_intraday(estimate, returns, positions, transactions):
         Prices and amounts of executed trades. One row per trade.
          - See full explanation in create_full_tear_sheet.
 
-    Returns
+    Returns:
     -------
     pd.DataFrame
         Daily net position values, adjusted for intraday movement.
     """
-
     if estimate == "infer":
         if positions is not None and transactions is not None:
             if detect_intraday(positions, transactions):
@@ -318,8 +299,7 @@ def check_intraday(estimate, returns, positions, transactions):
 
 
 def estimate_intraday(returns, positions, transactions, EOD_hour=23):
-    """
-    Intraday strategies will often not hold positions at the day end.
+    """Intraday strategies will often not hold positions at the day end.
     This attempts to find the point in the day that best represents
     the activity of the strategy on that day, and effectively resamples
     the end-of-day positions with the positions at this point of day.
@@ -338,12 +318,11 @@ def estimate_intraday(returns, positions, transactions, EOD_hour=23):
         Prices and amounts of executed trades. One row per trade.
          - See full explanation in create_full_tear_sheet.
 
-    Returns
+    Returns:
     -------
     pd.DataFrame
         Daily net position values, resampled for intraday behavior.
     """
-
     # Construct DataFrame of transaction amounts
     txn_val = transactions.copy()
     txn_val.index.names = ["date"]
@@ -376,8 +355,7 @@ def estimate_intraday(returns, positions, transactions, EOD_hour=23):
 
 
 def clip_returns_to_benchmark(rets, benchmark_rets):
-    """
-    Drop entries from rets so that the start and end dates of rets match those
+    """Drop entries from rets so that the start and end dates of rets match those
     of benchmark_rets.
 
     Parameters
@@ -389,13 +367,12 @@ def clip_returns_to_benchmark(rets, benchmark_rets):
     benchmark_rets : pd.Series
         Daily returns of the benchmark, noncumulative.
 
-    Returns
+    Returns:
     -------
     clipped_rets : pd.Series
         Daily noncumulative returns with index clipped to match that of
         benchmark returns.
     """
-
     if (rets.index[0] < benchmark_rets.index[0]) or (rets.index[-1] > benchmark_rets.index[-1]):
         clipped_rets = rets[benchmark_rets.index]
     else:
@@ -405,10 +382,8 @@ def clip_returns_to_benchmark(rets, benchmark_rets):
 
 
 def to_utc(df):
+    """For use in tests; applied UTC timestamp to DataFrame.
     """
-    For use in tests; applied UTC timestamp to DataFrame.
-    """
-
     try:
         df.index = df.index.tz_localize("UTC")
     except TypeError:
@@ -418,10 +393,8 @@ def to_utc(df):
 
 
 def to_series(df):
+    """For use in tests; converts DataFrame's first column to Series.
     """
-    For use in tests; converts DataFrame's first column to Series.
-    """
-
     return df[df.columns[0]]
 
 
@@ -435,8 +408,7 @@ SETTINGS = {"returns_func": default_returns_func}
 
 
 def register_return_func(func):
-    """
-    Registers the 'returns_func' that will be called for
+    """Registers the 'returns_func' that will be called for
     retrieving returns data.
 
     Parameters
@@ -449,17 +421,15 @@ def register_return_func(func):
 
         Where symbol is an asset identifier
 
-    Returns
+    Returns:
     -------
     None
     """
-
     SETTINGS["returns_func"] = func
 
 
 def get_symbol_rets(symbol, start=None, end=None):
-    """
-    Calls the currently registered 'returns_func'
+    """Calls the currently registered 'returns_func'
 
     Parameters
     ----------
@@ -474,18 +444,16 @@ def get_symbol_rets(symbol, start=None, end=None):
         Latest date to fetch data for.
         Defaults to latest date available.
 
-    Returns
+    Returns:
     -------
     pandas.Series
         Returned by the current 'returns_func'
     """
-
     return SETTINGS["returns_func"](symbol, start=start, end=end)
 
 
 def configure_legend(ax, autofmt_xdate=True, change_colors=False, rotation=30, ha="right"):
-    """
-    Format legend for perf attribution plots:
+    """Format legend for perf attribution plots:
     - put legend to the right of plot instead of overlapping with it
     - make legend order match up with graph lines
     - set colors according to colormap
@@ -523,8 +491,7 @@ def configure_legend(ax, autofmt_xdate=True, change_colors=False, rotation=30, h
 
 
 def sample_colormap(cmap_name, n_samples):
-    """
-    Sample a colormap from matplotlib
+    """Sample a colormap from matplotlib
     """
     colors = []
     colormap = get_cmap(cmap_name)

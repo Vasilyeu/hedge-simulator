@@ -1,5 +1,4 @@
-"""
-Performance attributes
+"""Performance attributes
 """
 
 import warnings
@@ -26,8 +25,7 @@ def perf_attrib(
     transactions=None,
     pos_in_dollars=True,
 ):
-    """
-    Attributes the performance of a returns stream to a set of risk factors.
+    """Attributes the performance of a returns stream to a set of risk factors.
 
     Pre-processes inputs, and then calls empyrical.perf_attrib. See
     empyrical.perf_attrib for more info.
@@ -103,7 +101,7 @@ def perf_attrib(
         Flag indicating whether `positions` are in dollars or percentages
         If True, positions are in dollars.
 
-    Returns
+    Returns:
     -------
     tuple of (risk_exposures_portfolio, perf_attribution)
 
@@ -141,8 +139,7 @@ def perf_attrib(
 
 
 def compute_exposures(positions, factor_loadings, stack_positions=True, pos_in_dollars=True):
-    """
-    Compute daily risk factor exposures.
+    """Compute daily risk factor exposures.
 
     Normalizes positions (if necessary) and calls ep.compute_exposures.
     See empyrical.compute_exposures for more info.
@@ -191,7 +188,7 @@ def compute_exposures(positions, factor_loadings, stack_positions=True, pos_in_d
         Flag indicating whether `positions` are in dollars or percentages
         If True, positions are in dollars.
 
-    Returns
+    Returns:
     -------
     risk_exposures_portfolio : pd.DataFrame
         df indexed by datetime, with factors as columns.
@@ -208,8 +205,7 @@ def compute_exposures(positions, factor_loadings, stack_positions=True, pos_in_d
 
 
 def create_perf_attrib_stats(perf_attributes, risk_exposures):
-    """
-    Takes perf attribution data over a period of time and computes annualized
+    """Takes perf attribution data over a period of time and computes annualized
     multifactor alpha, multifactor sharpe, risk exposures.
     """
     summary = OrderedDict()
@@ -257,8 +253,7 @@ def show_perf_attrib_stats(
     transactions=None,
     pos_in_dollars=True,
 ):
-    """
-    Calls `perf_attrib` using inputs, and displays outputs using
+    """Calls `perf_attrib` using inputs, and displays outputs using
     `utils.print_table`.
     """
     risk_exposures, perf_attrib_data = perf_attrib(
@@ -311,8 +306,7 @@ def show_perf_attrib_stats(
 
 
 def plot_returns(perf_attrib_data, cost=None, ax=None):
-    """
-    Plot total, specific, and common returns.
+    """Plot total, specific, and common returns.
 
     Parameters
     ----------
@@ -333,11 +327,10 @@ def plot_returns(perf_attrib_data, cost=None, ax=None):
     ax :  matplotlib.axes.Axes
         axes on which plots are made. if None, current axes will be used
 
-    Returns
+    Returns:
     -------
     ax :  matplotlib.axes.Axes
     """
-
     if ax is None:
         ax = plt.gca()
 
@@ -375,8 +368,7 @@ def plot_returns(perf_attrib_data, cost=None, ax=None):
 
 
 def plot_alpha_returns(alpha_returns, ax=None):
-    """
-    Plot histogram of daily multi-factor alpha returns (specific returns).
+    """Plot histogram of daily multi-factor alpha returns (specific returns).
 
     Parameters
     ----------
@@ -386,7 +378,7 @@ def plot_alpha_returns(alpha_returns, ax=None):
     ax :  matplotlib.axes.Axes
         axes on which plots are made. if None, current axes will be used
 
-    Returns
+    Returns:
     -------
     ax :  matplotlib.axes.Axes
     """
@@ -409,8 +401,7 @@ def plot_factor_contribution_to_perf(
     ax=None,
     title="Cumulative common returns attribution",
 ):
-    """
-    Plot each factor's contribution to performance.
+    """Plot each factor's contribution to performance.
 
     Parameters
     ----------
@@ -429,7 +420,7 @@ def plot_factor_contribution_to_perf(
     title : str, optional
         title of plot
 
-    Returns
+    Returns:
     -------
     ax :  matplotlib.axes.Axes
     """
@@ -459,8 +450,7 @@ def plot_factor_contribution_to_perf(
 
 
 def plot_risk_exposures(exposures, ax=None, title="Daily risk factor exposures"):
-    """
-    Parameters
+    """Parameters
     ----------
     exposures : pd.DataFrame
         df indexed by datetime, with factors as columns
@@ -475,7 +465,7 @@ def plot_risk_exposures(exposures, ax=None, title="Daily risk factor exposures")
 
     title : str, optional - plot title
 
-    Returns
+    Returns:
     -------
     ax :  matplotlib.axes.Axes
     """
@@ -500,8 +490,7 @@ def _align_and_warn(
     transactions=None,
     pos_in_dollars=True,
 ):
-    """
-    Make sure that all inputs have matching dates and tickers,
+    """Make sure that all inputs have matching dates and tickers,
     and raise warnings if necessary.
     """
     missing_stocks = positions.columns.difference(factor_loadings.index.get_level_values(1).unique())
@@ -588,8 +577,7 @@ def _align_and_warn(
 
 
 def _stack_positions(positions, pos_in_dollars=True):
-    """
-    Convert positions to percentages if necessary, and change them
+    """Convert positions to percentages if necessary, and change them
     to long format.
 
     Parameters
@@ -618,8 +606,7 @@ def _stack_positions(positions, pos_in_dollars=True):
 
 
 def _cumulative_returns_less_costs(returns, costs):
-    """
-    Compute cumulative returns, less costs.
+    """Compute cumulative returns, less costs.
     """
     if costs is None:
         return ep.cum_returns(returns)

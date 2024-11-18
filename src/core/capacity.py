@@ -1,5 +1,4 @@
-"""
-Capacity module
+"""Capacity module
 """
 
 import numpy as np
@@ -10,8 +9,7 @@ from . import pos
 
 
 def daily_txns_with_bar_data(transactions, market_data):
-    """
-    Sums the absolute value of shares traded in each name on each day.
+    """Sums the absolute value of shares traded in each name on each day.
     Add columns containing the closing price and total daily volume for
     each day-ticker combination.
 
@@ -25,14 +23,13 @@ def daily_txns_with_bar_data(transactions, market_data):
         - DataFrame has a multi-index index, one level is dates and another is
         market_data contains volume & price, equities as columns
 
-    Returns
+    Returns:
     -------
     txn_daily : pd.DataFrame
         Daily totals for transacted shares in each traded name.
         Price and volume columns for close price and daily volume for
         the corresponding ticker, respectively.
     """
-
     transactions.index.name = "date"
     txn_daily = pd.DataFrame(
         transactions.assign(amount=abs(transactions.amount)).groupby(["symbol", pd.Grouper(freq="D")]).sum()["amount"]
@@ -53,8 +50,7 @@ def days_to_liquidate_positions(
     capital_base=1e6,
     mean_volume_window=5,
 ):
-    """
-    Compute the number of days that would have been required
+    """Compute the number of days that would have been required
     to fully liquidate each position on each day based on the
     trailing n day mean daily bar volume and a limit on the proportion
     of a daily bar that we are allowed to consume.
@@ -83,13 +79,12 @@ def days_to_liquidate_positions(
     mean_volume_window : float
         Trailing window to use in mean volume calculation.
 
-    Returns
+    Returns:
     -------
     days_to_liquidate : pd.DataFrame
         Number of days required to fully liquidate daily positions.
         Datetime index, symbols as columns.
     """
-
     dv = market_data.xs("volume", level=1) * market_data.xs("price", level=1)
     roll_mean_dv = dv.rolling(window=mean_volume_window, center=False).mean().shift()
     roll_mean_dv = roll_mean_dv.replace(0, np.nan)
@@ -109,8 +104,7 @@ def get_max_days_to_liquidate_by_ticker(
     mean_volume_window=5,
     last_n_days=None,
 ):
-    """
-    Finds the longest estimated liquidation time for each traded
+    """Finds the longest estimated liquidation time for each traded
     name over the course of backtest (or last n days of the backtest).
 
     Parameters
@@ -133,14 +127,13 @@ def get_max_days_to_liquidate_by_ticker(
     last_n_days : integer
         Compute for only the last n days of the passed backtest data.
 
-    Returns
+    Returns:
     -------
     days_to_liquidate : pd.DataFrame
         Max Number of days required to fully liquidate each traded name.
         Index of symbols. Columns for days_to_liquidate and the corresponding
         date and position_alloc on that day.
     """
-
     dtlp = days_to_liquidate_positions(
         positions,
         market_data,
@@ -166,8 +159,7 @@ def get_max_days_to_liquidate_by_ticker(
 
 
 def get_low_liquidity_transactions(transactions, market_data, last_n_days=None):
-    """
-    For each traded name, find the daily transaction total that consumed
+    """For each traded name, find the daily transaction total that consumed
     the greatest proportion of available daily bar volume.
 
     Parameters
@@ -182,7 +174,6 @@ def get_low_liquidity_transactions(transactions, market_data, last_n_days=None):
     last_n_days : integer
         Compute for only the last n days of the passed backtest data.
     """
-
     txn_daily_w_bar = daily_txns_with_bar_data(transactions, market_data)
     txn_daily_w_bar.index.name = "date"
     txn_daily_w_bar = txn_daily_w_bar.reset_index()
@@ -206,8 +197,7 @@ def apply_slippage_penalty(
     backtest_starting_capital,
     impact=0.1,
 ):
-    """
-    Applies a quadratic volume share slippage model to daily returns based
+    """Applies a quadratic volume share slippage model to daily returns based
     on the proportion of the observed historical daily bar dollar volume
     consumed by the strategy's trades. Scales the size of trades based
     on the ratio of the starting capital we wish to test to the starting
@@ -227,12 +217,11 @@ def apply_slippage_penalty(
     impact : float
         Scales the size of the slippage penalty.
 
-    Returns
+    Returns:
     -------
     adj_returns : pd.Series
         Slippage penalty adjusted daily returns.
     """
-
     mult = simulate_starting_capital / backtest_starting_capital
     simulate_traded_shares = abs(mult * txn_daily.amount)
     simulate_traded_dollars = txn_daily.price * simulate_traded_shares

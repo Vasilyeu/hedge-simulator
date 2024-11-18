@@ -1,5 +1,4 @@
-"""
-Put options simulator
+"""Put options simulator
 """
 
 from datetime import date

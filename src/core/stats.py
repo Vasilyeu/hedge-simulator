@@ -35,8 +35,7 @@ from .periods import (
 
 
 def annualization_factor(period, annualization):
-    """
-    Return annualization factor from period entered or if a custom
+    """Return annualization factor from period entered or if a custom
     value is passed in.
 
     Parameters
@@ -55,7 +54,7 @@ def annualization_factor(period, annualization):
         returns into annual returns. Value should be the annual frequency of
         `returns`.
 
-    Returns
+    Returns:
     -------
     annualization_factor : float
     """
@@ -72,8 +71,7 @@ def annualization_factor(period, annualization):
 
 
 def simple_returns(prices):
-    """
-    Compute simple returns from a timeseries of prices.
+    """Compute simple returns from a timeseries of prices.
 
     Parameters
     ----------
@@ -81,7 +79,7 @@ def simple_returns(prices):
         Prices of assets in wide-format, with assets as columns,
         and indexed by datetimes.
 
-    Returns
+    Returns:
     -------
     returns : array-like
         Returns of assets in wide-format, with assets as columns,
@@ -101,8 +99,7 @@ def simple_returns(prices):
 
 
 def cum_returns(returns, starting_value=0, out=None) -> ArrayLike:
-    """
-    Compute cumulative returns from simple returns.
+    """Compute cumulative returns from simple returns.
 
     Parameters
     ----------
@@ -125,7 +122,7 @@ def cum_returns(returns, starting_value=0, out=None) -> ArrayLike:
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     cumulative_returns : array-like
         Series of cumulative returns.
@@ -164,8 +161,7 @@ def cum_returns(returns, starting_value=0, out=None) -> ArrayLike:
 
 
 def cum_returns_final(returns, starting_value=0):
-    """
-    Compute total returns from simple returns.
+    """Compute total returns from simple returns.
 
     Parameters
     ----------
@@ -174,7 +170,7 @@ def cum_returns_final(returns, starting_value=0):
     starting_value : float, optional
        The starting returns.
 
-    Returns
+    Returns:
     -------
     total_returns : pd.Series, np.ndarray, or float
         If input is 1-dimensional (a Series or 1D numpy array), the result is a
@@ -200,8 +196,7 @@ def cum_returns_final(returns, starting_value=0):
 
 
 def aggregate_returns(returns, convert_to):
-    """
-    Aggregates returns by week, month, or year.
+    """Aggregates returns by week, month, or year.
 
     Parameters
     ----------
@@ -211,7 +206,7 @@ def aggregate_returns(returns, convert_to):
     convert_to : str
         Can be 'weekly', 'monthly', or 'yearly'.
 
-    Returns
+    Returns:
     -------
     aggregated_returns : pd.Series
     """
@@ -228,14 +223,13 @@ def aggregate_returns(returns, convert_to):
     elif convert_to == YEARLY:
         grouping = [lambda x: x.year]
     else:
-        raise ValueError("convert_to must be {}, {} or {}".format(WEEKLY, MONTHLY, YEARLY))
+        raise ValueError(f"convert_to must be {WEEKLY}, {MONTHLY} or {YEARLY}")
 
     return returns.groupby(grouping).apply(cumulate_returns)
 
 
 def drawdown_series(returns, out=None):
-    """
-    Computes the series of drawdowns of a strategy.
+    """Computes the series of drawdowns of a strategy.
 
     Parameters
     ----------
@@ -246,11 +240,11 @@ def drawdown_series(returns, out=None):
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     drawdown_series :  pd.Series, pd.DataFrame or np.ndarray
 
-    Note
+    Note:
     -----
     See https://en.wikipedia.org/wiki/Drawdown_(economics) for more details.
     """
@@ -291,8 +285,7 @@ def drawdown_series(returns, out=None):
 
 
 def max_drawdown(returns, out=None):
-    """
-    Determines the maximum drawdown of a strategy.
+    """Determines the maximum drawdown of a strategy.
 
     Parameters
     ----------
@@ -303,11 +296,11 @@ def max_drawdown(returns, out=None):
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     max_drawdown : float, np.array or pd.Series
 
-    Note
+    Note:
     -----
     See https://en.wikipedia.org/wiki/Drawdown_(economics) for more details.
     """
@@ -336,8 +329,7 @@ roll_max_drawdown = _create_unary_vectorized_roll_function(max_drawdown)
 
 
 def annual_return(returns, period=DAILY, annualization=None):
-    """
-    Determines the mean annual growth rate of returns. This is equivilent
+    """Determines the mean annual growth rate of returns. This is equivilent
     to the compound annual growth rate.
 
     Parameters
@@ -359,13 +351,12 @@ def annual_return(returns, period=DAILY, annualization=None):
         returns into annual returns. Value should be the annual frequency of
         `returns`.
 
-    Returns
+    Returns:
     -------
     annual_return : float
         Annual Return as CAGR (Compounded Annual Growth Rate).
 
     """
-
     if len(returns) < 1:
         return np.nan
 
@@ -378,8 +369,7 @@ def annual_return(returns, period=DAILY, annualization=None):
 
 
 def cagr(returns, period=DAILY, annualization=None):
-    """
-    Compute compound annual growth rate. Alias function for
+    """Compute compound annual growth rate. Alias function for
     :func:`~empyrical.stats.annual_return`
 
     Parameters
@@ -402,7 +392,7 @@ def cagr(returns, period=DAILY, annualization=None):
         `returns`.
         - See full explanation in :func:`~empyrical.stats.annual_return`.
 
-    Returns
+    Returns:
     -------
     cagr : float
         The CAGR value.
@@ -415,8 +405,7 @@ roll_cagr = _create_unary_vectorized_roll_function(cagr)
 
 
 def annual_volatility(returns, period=DAILY, alpha=2.0, annualization=None, out=None):
-    """
-    Determines the annual volatility of a strategy.
+    """Determines the annual volatility of a strategy.
 
     Parameters
     ----------
@@ -442,7 +431,7 @@ def annual_volatility(returns, period=DAILY, alpha=2.0, annualization=None, out=
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     annual_volatility : float
     """
@@ -472,8 +461,7 @@ roll_annual_volatility = _create_unary_vectorized_roll_function(
 
 
 def calmar_ratio(returns, period=DAILY, annualization=None):
-    """
-    Determines the Calmar ratio, or drawdown ratio, of a strategy.
+    """Determines the Calmar ratio, or drawdown ratio, of a strategy.
 
     Parameters
     ----------
@@ -495,17 +483,16 @@ def calmar_ratio(returns, period=DAILY, annualization=None):
         `returns`.
 
 
-    Returns
+    Returns:
     -------
     calmar_ratio : float
         Calmar ratio (drawdown ratio) as float. Returns np.nan if there is no
         calmar ratio.
 
-    Note
+    Note:
     -----
     See https://en.wikipedia.org/wiki/Calmar_ratio for more details.
     """
-
     max_dd = max_drawdown(returns=returns)
     if max_dd < 0:
         temp = annual_return(returns=returns, period=period, annualization=annualization) / abs(max_dd)
@@ -543,16 +530,15 @@ def omega_ratio(
         Factor used to convert the required_return into a daily
         value. Enter 1 if no time period conversion is necessary.
 
-    Returns
+    Returns:
     -------
     omega_ratio : float
 
-    Note
+    Note:
     -----
     See https://en.wikipedia.org/wiki/Omega_ratio for more details.
 
     """
-
     if len(returns) < 2:
         return np.nan
 
@@ -575,8 +561,7 @@ def omega_ratio(
 
 
 def sharpe_ratio(returns, risk_free=0, period=DAILY, annualization=None, out=None):
-    """
-    Determines the Sharpe ratio of a strategy.
+    """Determines the Sharpe ratio of a strategy.
 
     Parameters
     ----------
@@ -602,12 +587,12 @@ def sharpe_ratio(returns, risk_free=0, period=DAILY, annualization=None, out=Non
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     sharpe_ratio : float
         nan if insufficient length of returns or if if adjusted returns are 0.
 
-    Note
+    Note:
     -----
     See https://en.wikipedia.org/wiki/Sharpe_ratio for more details.
 
@@ -656,8 +641,7 @@ def sortino_ratio(
     out=None,
     _downside_risk=None,
 ):
-    """
-    Determines the Sortino ratio of a strategy.
+    """Determines the Sortino ratio of a strategy.
 
     Parameters
     ----------
@@ -686,7 +670,7 @@ def sortino_ratio(
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     sortino_ratio : float or pd.Series
 
@@ -694,7 +678,7 @@ def sortino_ratio(
         series ==> float
         DataFrame ==> pd.Series
 
-    Note
+    Note:
     -----
     See `<https://www.sunrisecapital.com/wp-content/uploads/2014/06/Futures_
     Mag_Sortino_0213.pdf>`__ for more details.
@@ -737,8 +721,7 @@ roll_sortino_ratio = _create_unary_vectorized_roll_function(sortino_ratio)
 
 
 def downside_risk(returns, required_return=0, period=DAILY, annualization=None, out=None):
-    """
-    Determines the downside deviation below a threshold
+    """Determines the downside deviation below a threshold
 
     Parameters
     ----------
@@ -764,14 +747,14 @@ def downside_risk(returns, required_return=0, period=DAILY, annualization=None, 
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     downside_deviation : float or pd.Series
         depends on input type
         series ==> float
         DataFrame ==> pd.Series
 
-    Note
+    Note:
     -----
     See `<https://www.sunrisecapital.com/wp-content/uploads/2014/06/Futures_
     Mag_Sortino_0213.pdf>`__ for more details, specifically why using the
@@ -826,8 +809,7 @@ def roll_downsize_risk(*args, **kwargs):
 
 
 def excess_sharpe(returns, factor_returns, out=None):
-    """
-    Determines the Excess Sharpe of a strategy.
+    """Determines the Excess Sharpe of a strategy.
 
     Parameters
     ----------
@@ -840,11 +822,11 @@ def excess_sharpe(returns, factor_returns, out=None):
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     excess_sharpe : float
 
-    Note
+    Note:
     -----
     The excess Sharpe is a simplified Information Ratio that uses
     tracking error rather than "active risk" as the denominator.
@@ -919,7 +901,7 @@ def alpha_beta(
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     alpha : float
     beta : float
@@ -937,8 +919,7 @@ def alpha_beta(
 
 
 def roll_alpha_beta(returns, factor_returns, window=10, **kwargs):
-    """
-    Computes alpha and beta over a rolling window.
+    """Computes alpha and beta over a rolling window.
 
     Parameters
     ----------
@@ -1002,7 +983,7 @@ def alpha_beta_aligned(
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     alpha : float
     beta : float
@@ -1073,7 +1054,7 @@ def alpha(
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     float
         Alpha.
@@ -1143,7 +1124,7 @@ def alpha_aligned(
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     alpha : float
     """
@@ -1207,7 +1188,7 @@ def beta(returns, factor_returns, risk_free=0.0, out=None):
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     beta : float
     """
@@ -1248,7 +1229,7 @@ def beta_aligned(returns, factor_returns, risk_free=0.0, out=None):
         Array to use as output buffer.
         If not passed, a new array will be created.
 
-    Returns
+    Returns:
     -------
     beta : float
         Beta.
@@ -1355,7 +1336,7 @@ def stability_of_timeseries(returns):
         Daily returns of the strategy, noncumulative.
         - See full explanation in :func:`~empyrical.stats.cum_returns`.
 
-    Returns
+    Returns:
     -------
     float
         R-squared.
@@ -1385,11 +1366,10 @@ def tail_ratio(returns):
         Daily returns of the strategy, noncumulative.
          - See full explanation in :func:`~empyrical.stats.cum_returns`.
 
-    Returns
+    Returns:
     -------
     tail_ratio : float
     """
-
     if len(returns) < 1:
         return np.nan
 
@@ -1423,11 +1403,11 @@ def capture(returns, factor_returns, period=DAILY):
             'weekly': 52
             'daily': 252
 
-    Returns
+    Returns:
     -------
     capture_ratio : float
 
-    Note
+    Note:
     ----
     See http://www.investopedia.com/terms/u/up-market-capture-ratio.asp for
     details.
@@ -1448,12 +1428,12 @@ def beta_fragility_heuristic(returns, factor_returns):
              computed. Usually a benchmark such as the market.
              - This is in the same style as returns.
 
-        Returns
+    Returns:
         -------
         float, np.nan
             The beta fragility of the strategy.
 
-        Note
+    Note:
         ----
         A negative return value indicates potential losses
         could follow volatility in beta.
@@ -1484,12 +1464,12 @@ def beta_fragility_heuristic_aligned(returns, factor_returns):
              computed. Usually a benchmark such as the market.
              - This is in the same style as returns.
 
-        Returns
+    Returns:
         -------
         float, np.nan
             The beta fragility of the strategy.
 
-        Note
+    Note:
         ----
         If they are pd.Series, expects returns and factor_returns have already
         been aligned on their labels.  If np.ndarray, these arguments should
@@ -1550,7 +1530,7 @@ def gpd_risk_estimates(returns, var_p=0.01):
     var_p : float
         The percentile to use for estimating the VaR and ES
 
-    Returns
+    Returns:
     -------
     [threshold, scale_param, shape_param, var_estimate, es_estimate]
         : list[float]
@@ -1562,7 +1542,7 @@ def gpd_risk_estimates(returns, var_p=0.01):
         var_estimate - an estimate for the VaR for the given percentile
         es_estimate - an estimate for the ES for the given percentile
 
-    Note
+    Note:
     ----
     see also::
     `An Application of Extreme Value Theory for Measuring Risk
@@ -1589,7 +1569,7 @@ def gpd_risk_estimates_aligned(returns, var_p=0.01):
     var_p : float
         The percentile to use for estimating the VaR and ES
 
-    Returns
+    Returns:
     -------
     [threshold, scale_param, shape_param, var_estimate, es_estimate]
         : list[float]
@@ -1601,7 +1581,7 @@ def gpd_risk_estimates_aligned(returns, var_p=0.01):
         var_estimate - an estimate for the VaR for the given percentile
         es_estimate - an estimate for the ES for the given percentile
 
-    Note
+    Note:
     ----
     seealso::
     `An Application of Extreme Value Theory for Measuring Risk
@@ -1744,8 +1724,7 @@ def gpd_loglikelihood_scale_only(scale, price_data):
 
 
 def up_capture(returns, factor_returns, **kwargs):
-    """
-    Compute the capture ratio for periods when the benchmark return is positive
+    """Compute the capture ratio for periods when the benchmark return is positive
 
     Parameters
     ----------
@@ -1765,11 +1744,11 @@ def up_capture(returns, factor_returns, **kwargs):
             'weekly': 52
             'daily': 252
 
-    Returns
+    Returns:
     -------
     up_capture : float
 
-    Note
+    Note:
     ----
     See http://www.investopedia.com/terms/u/up-market-capture-ratio.asp for
     more information.
@@ -1778,8 +1757,7 @@ def up_capture(returns, factor_returns, **kwargs):
 
 
 def down_capture(returns, factor_returns, **kwargs):
-    """
-    Compute the capture ratio for periods when the benchmark return is negative
+    """Compute the capture ratio for periods when the benchmark return is negative
 
     Parameters
     ----------
@@ -1799,11 +1777,11 @@ def down_capture(returns, factor_returns, **kwargs):
             'weekly': 52
             'daily': 252
 
-    Returns
+    Returns:
     -------
     down_capture : float
 
-    Note
+    Note:
     ----
     See http://www.investopedia.com/terms/d/down-market-capture-ratio.asp for
     more information.
@@ -1812,8 +1790,7 @@ def down_capture(returns, factor_returns, **kwargs):
 
 
 def up_down_capture(returns, factor_returns, **kwargs):
-    """
-    Computes the ratio of up_capture to down_capture.
+    """Computes the ratio of up_capture to down_capture.
 
     Parameters
     ----------
@@ -1833,7 +1810,7 @@ def up_down_capture(returns, factor_returns, **kwargs):
             'weekly': 52
             'daily': 252
 
-    Returns
+    Returns:
     -------
     up_down_capture : float
         the updown capture ratio
@@ -1842,8 +1819,7 @@ def up_down_capture(returns, factor_returns, **kwargs):
 
 
 def batting_average(returns, factor_returns):
-    """
-    Computes the batting average.
+    """Computes the batting average.
     Parameters
     ----------
     returns : pd.Series or np.ndarray
@@ -1853,11 +1829,13 @@ def batting_average(returns, factor_returns):
         Noncumulative returns of the factor to which beta is
         computed. Usually a benchmark such as the market.
         - This is in the same style as returns.
-    Returns
+
+    Returns:
     -------
     batting_average : pd.Series
         batting average, up market, down market
-    Note
+
+    Note:
     ----
     See https://www.investopedia.com/terms/b/batting-average.asp for
     more information.
@@ -1884,14 +1862,13 @@ def batting_average(returns, factor_returns):
 
 
 def up_alpha_beta(returns, factor_returns, **kwargs):
-    """
-    Computes alpha and beta for periods when the benchmark return is positive.
+    """Computes alpha and beta for periods when the benchmark return is positive.
 
     Parameters
     ----------
     see documentation for `alpha_beta`.
 
-    Returns
+    Returns:
     -------
     float
         Alpha.
@@ -1902,14 +1879,13 @@ def up_alpha_beta(returns, factor_returns, **kwargs):
 
 
 def down_alpha_beta(returns, factor_returns, **kwargs):
-    """
-    Computes alpha and beta for periods when the benchmark return is negative.
+    """Computes alpha and beta for periods when the benchmark return is negative.
 
     Parameters
     ----------
     see documentation for `alpha_beta`.
 
-    Returns
+    Returns:
     -------
     alpha : float
     beta : float
@@ -1918,8 +1894,7 @@ def down_alpha_beta(returns, factor_returns, **kwargs):
 
 
 def roll_up_capture(returns, factor_returns, window=10, **kwargs):
-    """
-    Computes the up capture measure over a rolling window.
+    """Computes the up capture measure over a rolling window.
     see documentation for :func:`~empyrical.stats.up_capture`.
     (pass all args, kwargs required)
 
@@ -1942,8 +1917,7 @@ def roll_up_capture(returns, factor_returns, window=10, **kwargs):
 
 
 def roll_down_capture(returns, factor_returns, window=10, **kwargs):
-    """
-    Computes the down capture measure over a rolling window.
+    """Computes the down capture measure over a rolling window.
     see documentation for :func:`~empyrical.stats.down_capture`.
     (pass all args, kwargs required)
 
@@ -1966,8 +1940,7 @@ def roll_down_capture(returns, factor_returns, window=10, **kwargs):
 
 
 def roll_up_down_capture(returns, factor_returns, window=10, **kwargs):
-    """
-    Computes the up/down capture measure over a rolling window.
+    """Computes the up/down capture measure over a rolling window.
     see documentation for :func:`~empyrical.stats.up_down_capture`.
     (pass all args, kwargs required)
 
@@ -1996,8 +1969,7 @@ def roll_up_down_capture(returns, factor_returns, window=10, **kwargs):
 
 
 def value_at_risk(returns, cutoff=0.05):
-    """
-    Value at risk (VaR) of a returns stream.
+    """Value at risk (VaR) of a returns stream.
 
     Parameters
     ----------
@@ -2007,7 +1979,7 @@ def value_at_risk(returns, cutoff=0.05):
         Decimal representing the percentage cutoff for the bottom percentile of
         returns. Defaults to 0.05.
 
-    Returns
+    Returns:
     -------
     VaR : float
         The VaR value.
@@ -2016,8 +1988,7 @@ def value_at_risk(returns, cutoff=0.05):
 
 
 def conditional_value_at_risk(returns, cutoff=0.05):
-    """
-    Conditional value at risk (CVaR) of a returns stream.
+    """Conditional value at risk (CVaR) of a returns stream.
 
     CVaR measures the expected single-day returns of an asset on that asset's
     worst performing days, where "worst-performing" is defined as falling below
@@ -2031,7 +2002,7 @@ def conditional_value_at_risk(returns, cutoff=0.05):
         Decimal representing the percentage cutoff for the bottom percentile of
         returns. Defaults to 0.05.
 
-    Returns
+    Returns:
     -------
     CVaR : float
         The CVaR value.
@@ -2045,8 +2016,7 @@ def conditional_value_at_risk(returns, cutoff=0.05):
 
 
 def rolling_beta(returns, factor_returns, rolling_window=APPROX_BDAYS_PER_MONTH * 6):
-    """
-    Determines the rolling beta of a strategy.
+    """Determines the rolling beta of a strategy.
 
     Parameters
     ----------
@@ -2062,12 +2032,12 @@ def rolling_beta(returns, factor_returns, rolling_window=APPROX_BDAYS_PER_MONTH 
         The size of the rolling window, in days, over which to compute
         beta (default 6 months).
 
-    Returns
+    Returns:
     -------
     pd.Series
         Rolling beta.
 
-    Note
+    Note:
     -----
     See https://en.wikipedia.org/wiki/Beta_(finance) for more details.
     """
@@ -2080,8 +2050,7 @@ def rolling_beta(returns, factor_returns, rolling_window=APPROX_BDAYS_PER_MONTH 
 
 
 def gross_lev(positions):
-    """
-    Calculates the gross leverage of a strategy.
+    """Calculates the gross leverage of a strategy.
 
     Parameters
     ----------
@@ -2089,12 +2058,11 @@ def gross_lev(positions):
         Daily net position values.
          - See full explanation in tears.create_full_tear_sheet.
 
-    Returns
+    Returns:
     -------
     pd.Series
         Gross leverage.
     """
-
     exposure = positions.drop("cash", axis=1).abs().sum(axis=1)
     return exposure / positions.sum(axis=1)
 

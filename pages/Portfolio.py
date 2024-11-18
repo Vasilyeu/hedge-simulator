@@ -1,5 +1,4 @@
-"""
-UI for application
+"""UI for application
 """
 
 import streamlit as st
