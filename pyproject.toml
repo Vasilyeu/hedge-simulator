@@ -4,7 +4,7 @@ version = '0.1.0'
 authors = [
     { name='Sergey Vasilev', email='vasilev.sergey.ur@gmail.com' },
 ]
-description = 'Hedging simmulations using put options'
+description = 'Hedging simulations using put options'
 readme = 'README.md'
 requires-python = '>=3.12'
 classifiers = [
@@ -26,7 +26,7 @@ omit = [
 [tool.poetry]
 name = "hedge-simulator"
 version = "0.1.0"
-description = "Hedging simmulations using put options"
+description = "Hedging simulations using put options"
 authors = ["Sergey Vasilev"]
 readme = "README.md"
 package-mode = false
