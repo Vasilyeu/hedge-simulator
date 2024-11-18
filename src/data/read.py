@@ -1,5 +1,4 @@
-"""Module for reading data.
-"""
+"""Module for reading data."""
 
 import datetime
 
@@ -12,30 +11,31 @@ from requests_cache import CacheMixin, SQLiteCache
 from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
 
 
-class CachedLimiterSession(CacheMixin, LimiterMixin, Session):  # pylint: disable=abstract-method
-    """Request session with caching and rate limiting"""
+class CachedLimiterSession(CacheMixin, LimiterMixin, Session):
+    """Request session with caching and rate limiting."""
 
 
 class YahooFinanceReader:
-    """Yahoo Finance API Reader"""
+    """Yahoo Finance API Reader."""
 
     def __init__(self):
+        """Initialize YahooFinanceReader instance."""
         self.session = self._get_session()
 
     def get_stock_prices(self, ticker: str, start_date: str, end_date: str) -> pd.DataFrame:
-        """Get prices from Yahoo Finance API"""
+        """Get prices from Yahoo Finance API."""
         ticker_data = yf.Ticker(ticker, session=self.session)
         history = ticker_data.history(start=start_date, end=end_date, auto_adjust=True)
         history = history.assign(ticker=ticker).reset_index()
         return history.reset_index()
 
     def get_stock_sector(self, ticker: str) -> dict[str, str]:
-        """Get company sector from Yahoo Finance"""
+        """Get company sector from Yahoo Finance."""
         ticker_data = yf.Ticker(ticker, session=self.session)
         return {"ticker": ticker, "sector": ticker_data.info["sector"]}
 
     def _get_session(self):
-        """Create session for API calls"""
+        """Create session for API calls."""
         return CachedLimiterSession(
             limiter=Limiter(RequestRate(2, Duration.SECOND * 5)),
             bucket_class=MemoryQueueBucket,
@@ -44,9 +44,10 @@ class YahooFinanceReader:
 
 
 class LocalReader:
-    """Local DB wrapper"""
+    """Local DB wrapper."""
 
     def __init__(self):
+        """Initialize LocalReader instance."""
         self.local_file = "data/jinbu.duckdb"
         self.con = duckdb.connect(database=self.local_file, read_only=False)
         self._create_tables_if_not_exists()
@@ -56,7 +57,8 @@ class LocalReader:
         self.con.execute(
             
                 "CREATE TABLE IF NOT EXISTS stocks "
-                "(ticker VARCHAR, date DATE, open FLOAT, close FLOAT, high FLOAT, low FLOAT, PRIMARY KEY (ticker, date))"
+                "(ticker VARCHAR, date DATE, open FLOAT, close FLOAT, "
+                "high FLOAT, low FLOAT, PRIMARY KEY (ticker, date))"
             
         )
         self.con.execute(
@@ -64,16 +66,16 @@ class LocalReader:
         )
 
     def check_ticker(self, ticker) -> list:
-        """Check the first and last available dates for ticker"""
+        """Check the first and last available dates for ticker."""
         return self.con.sql(f"SELECT MIN(date), MAX(date) FROM stocks WHERE ticker = '{ticker}'").fetchall()[0]
 
     def save_prices(self, data: pd.DataFrame):
-        """Save prices to DB"""
-        df = data[["ticker", "Date", "Open", "Close", "High", "Low"]]  # pylint: disable=unused-variable)
+        """Save prices to DB."""
+        df = data[["ticker", "Date", "Open", "Close", "High", "Low"]]  # ruff # noqa: F841
         self.con.execute("INSERT OR IGNORE INTO stocks SELECT * FROM df")
 
     def get_prices(self, ticker: str, start_date: datetime.date, end_date: datetime.date) -> pd.DataFrame:
-        """Read prices from DB"""
+        """Read prices from DB."""
         return self.con.sql(
             
                 f"SELECT date, close FROM stocks "
@@ -82,11 +84,11 @@ class LocalReader:
         ).df()
 
     def save_sector(self, data: dict[str, str]) -> None:
-        """Save sector info in DB"""
+        """Save sector info in DB."""
         self.con.execute("INSERT OR IGNORE INTO stocks_info VALUES (?, ?)", [data["ticker"], data["sector"]])
 
     def get_sector(self, tickers: list[str]) -> pd.DataFrame:
-        """Read sector info from DB"""
+        """Read sector info from DB."""
         return self.con.execute(
             "SELECT ticker, sector FROM stocks_info WHERE ticker IN (SELECT UNNEST(?))", [tickers]
         ).df()
@@ -94,7 +96,9 @@ class LocalReader:
 
 def read_prices(ticker: str, start_date: datetime.date, end_date: datetime.date) -> pd.Series:
     """Read prices for the ticker.
-    First, try to read prices from a local database. If data is absent - get data from Yahoo Finance API
+
+    First, try to read prices from a local database. If data is absent - get data from Yahoo Finance API.
+
     :param ticker: string, market ticker
     :param start_date: first date to read
     :param end_date: last date to read
@@ -126,7 +130,8 @@ def read_prices(ticker: str, start_date: datetime.date, end_date: datetime.date)
 
 
 def read_sector(tickers: list[str]) -> pd.DataFrame:
-    """Read industry of the company
+    """Read industry of the company.
+
     :param tickers: list of strings, companies' market tickers
     :return: pandas DataFrame with tickers and industries
     """
